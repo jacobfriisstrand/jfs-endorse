@@ -1,18 +1,53 @@
 ---
-export interface Props {
-  title: string;
+const { seoMetaTags } = Astro.props;
+
+import { fetchData } from "@/lib/fetchData";
+export interface MetaTag {
+  tag: string;
+  content?: string;
+  attributes?: {
+    content?: string;
+    property?: string;
+    name?: string;
+  };
+}
+// Interface for the favicon meta tag
+export interface FaviconMetaTag {
+  tag: string;
+  attributes: {
+    rel: string;
+    type: string;
+    sizes: string;
+    href: string;
+  };
 }
 
-const { title } = Astro.props as Props;
+export interface SiteData {
+  _site: {
+    faviconMetaTags: FaviconMetaTag[];
+  };
+}
+
+const data = await fetchData<SiteData>(`{
+  _site {
+    faviconMetaTags {
+      tag
+      attributes
+    }
+  }
+}`);
+
+console.log(seoMetaTags);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="da">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <title>{title}</title>
+    {data._site.faviconMetaTags.map((tag) => <link rel={tag.attributes.rel} type={tag.attributes.type} sizes={tag.attributes.sizes} href={tag.attributes.href} />)}
+    {seoMetaTags.map((tag: MetaTag) => <meta property={tag.attributes?.property} name={tag.attributes?.name} content={tag.attributes?.content} />)}
+    <title>{seoMetaTags[0].content}</title>
   </head>
   <body>
     <slot />

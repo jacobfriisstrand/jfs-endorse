@@ -1,7 +1,25 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import BaseLayout, { type MetaTag } from "@/layouts/BaseLayout.astro";
+import { fetchData } from "@/lib/fetchData";
+
+export interface HomepageProps {
+  homepage: {
+    _seoMetaTags: MetaTag[];
+  };
+}
+
+const data = await fetchData<HomepageProps>(`{
+  homepage {
+    _seoMetaTags {
+      content
+      attributes
+    }
+  }
+}`);
+
+// console.log(data.homepage._seoMetaTags);
 ---
 
-<BaseLayout title="Astro">
+<BaseLayout seoMetaTags={data.homepage._seoMetaTags}>
   <h1>Forside</h1>
 </BaseLayout>

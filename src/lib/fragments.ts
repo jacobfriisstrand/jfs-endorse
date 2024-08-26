@@ -10,7 +10,7 @@ export const responsiveImageFragment = `
     aspectRatio
     alt
     title
-    base64
+    base64 
   }
 `;
 
