@@ -1,3 +1,4 @@
+// See: https://www.datocms.com/blog/offer-responsive-progressive-lqip-images-in-2020
 export const responsiveImageFragment = `
   fragment responsiveImageFragment on ResponsiveImage {
     srcSet
