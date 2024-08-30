@@ -1,4 +1,5 @@
 ---
+import HeroCarousel from "@/components/HeroCarousel.astro";
 import BaseLayout, { type MetaTag } from "@/layouts/BaseLayout.astro";
 import { fetchData } from "@/lib/fetchData";
 
@@ -16,10 +17,8 @@ const data = await fetchData<HomepageProps>(`{
     }
   }
 }`);
-
-// console.log(data.homepage._seoMetaTags);
 ---
 
 <BaseLayout seoMetaTags={data.homepage._seoMetaTags}>
-  <h1>Forside</h1>
+  <HeroCarousel />
 </BaseLayout>
