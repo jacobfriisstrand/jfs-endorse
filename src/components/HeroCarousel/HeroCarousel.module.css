@@ -98,7 +98,6 @@
       &:hover {
         .endorser__link__arrow {
           transform: translateX(var(--spacing-4));
-
           transition:
             transform var(--transition-300) var(--ease-in-out-quint),
             color var(--transition-300) var(--ease-in-out-quint);
@@ -137,13 +136,13 @@
       transition:
         transform var(--transition-300) var(--ease-in-out-quint),
         color var(--transition-300) var(--ease-in-out-quint);
-    }
-    &:hover {
-      transform: translateY(calc(var(--spacing-4) * -1));
-      transition:
-        transform var(--transition-300) var(--ease-in-out-quint),
-        color var(--transition-300) var(--ease-in-out-quint);
-      color: var(--base-lightGray);
+      &:hover {
+        transform: translateY(calc(var(--spacing-4) * -1));
+        transition:
+          transform var(--transition-300) var(--ease-in-out-quint),
+          color var(--transition-300) var(--ease-in-out-quint);
+        color: var(--base-lightGray);
+      }
     }
   }
 }
