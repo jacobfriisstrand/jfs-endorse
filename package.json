@@ -11,8 +11,16 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.3",
+    "@astrojs/react": "^3.6.2",
     "@datocms/astro": "^0.3.4",
+    "@types/react": "^18.3.4",
+    "@types/react-dom": "^18.3.0",
     "astro": "^4.14.4",
+    "embla-carousel-autoplay": "^8.2.0",
+    "embla-carousel-fade": "^8.2.0",
+    "embla-carousel-react": "^8.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "typescript": "^5.5.4"
   },
   "devDependencies": {

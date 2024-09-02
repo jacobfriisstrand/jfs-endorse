@@ -1,0 +1,15 @@
+---
+import "@/globals.css";
+const { tag, class: className } = Astro.props;
+const Tag = tag;
+---
+
+<Tag class:list={["base", className]}>
+  <slot />
+</Tag>
+
+<style>
+  .base {
+    line-height: var(--line-height-heading);
+  }
+</style>

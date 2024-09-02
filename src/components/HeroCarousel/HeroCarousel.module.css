@@ -1,0 +1,230 @@
+@import "../../globals.css";
+
+:scope {
+  --fill-viewport: 100svh;
+}
+
+.hero {
+  position: relative;
+  min-height: var(--fill-viewport);
+
+  @media (min-width: 1360px) {
+    min-height: 90svh;
+  }
+}
+
+.hero__header {
+  @media (min-width: 1360px) {
+    transform: translateX(25%);
+  }
+
+  position: absolute;
+  display: grid;
+  gap: 1rem;
+  top: 50%;
+  text-wrap: balance;
+  z-index: 1;
+  padding-inline: var(--spacing-20);
+
+  h1 {
+    font-size: var(--text-xl);
+    font-family: var(--font-serif);
+
+    @media (min-width: 1360px) {
+      font-size: var(--text-2xl);
+    }
+  }
+}
+
+.embla {
+  position: absolute;
+  min-height: 100%;
+}
+
+.embla__slide {
+  transition: opacity var(--transition-150) var(--linear);
+  width: 100%;
+}
+
+.embla__container {
+  @media (min-width: 1360px) {
+    height: 90svh;
+  }
+
+  .embla__slide {
+    min-height: 100svh;
+    position: relative;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    img {
+      height: var(--fill-viewport);
+      width: 100%;
+      filter: grayscale(100%);
+      opacity: 0.5;
+      object-fit: cover;
+    }
+
+    p {
+      font-size: var(--text-sm);
+    }
+
+    a {
+      padding-inline: var(--spacing-20);
+      color: var(--base-dark);
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      width: 80%;
+      text-wrap: balance;
+      bottom: var(--spacing-44);
+      left: 0;
+      height: fit-content;
+
+      .endorser__link__arrow {
+        width: var(--spacing-20);
+        transition:
+          transform var(--transition-300) var(--ease-in-out-quint),
+          color var(--transition-300) var(--ease-in-out-quint);
+        color: var(--base-dark);
+      }
+
+      &:hover {
+        .endorser__link__arrow {
+          transform: translateX(var(--spacing-4));
+
+          transition:
+            transform var(--transition-300) var(--ease-in-out-quint),
+            color var(--transition-300) var(--ease-in-out-quint);
+          color: var(--base-lightGray);
+        }
+      }
+
+      @media (min-width: 1360px) {
+        width: 50%;
+        top: 45%;
+        transform: translateX(150%);
+        padding-inline: 0;
+
+        h2 {
+          font-family: var(--font-serif);
+          font-size: var(--text-lg);
+          font-weight: var(--font-weight-bold);
+        }
+      }
+    }
+  }
+}
+
+.embla__controls {
+  padding-right: var(--spacing-16);
+  position: absolute;
+  bottom: var(--spacing-60);
+  right: 0;
+
+  .embla__buttons {
+    display: flex;
+    gap: var(--spacing-16);
+    button {
+      height: var(--spacing-24);
+      width: var(--spacing-24);
+      transition:
+        transform var(--transition-300) var(--ease-in-out-quint),
+        color var(--transition-300) var(--ease-in-out-quint);
+    }
+    &:hover {
+      transform: translateY(calc(var(--spacing-4) * -1));
+      transition:
+        transform var(--transition-300) var(--ease-in-out-quint),
+        color var(--transition-300) var(--ease-in-out-quint);
+      color: var(--base-lightGray);
+    }
+  }
+}
+
+.embla__dots {
+  @media (min-width: 1360px) {
+    width: 30%;
+    right: 0;
+  }
+
+  padding-inline: var(--spacing-20);
+  --dot-slide-time: 5000ms;
+  position: absolute;
+  display: flex;
+  gap: var(--spacing-16);
+  justify-content: space-between;
+  bottom: var(--spacing-16);
+  width: 100%;
+
+  .embla__dot {
+    height: var(--spacing-8);
+    aspect-ratio: var(--1-1);
+    position: relative;
+    overflow: hidden;
+    background-color: var(--base-lightGray);
+    border-radius: var(--rounded-full);
+    @media (prefers-reduced-motion: no-preference) {
+      transition: flex var(--transition-700) var(--ease-in-out-quint);
+    }
+
+    &:after {
+      content: "";
+      inset: 0;
+      background-color: var(--base-dark);
+      position: absolute;
+      z-index: -10;
+    }
+  }
+
+  .embla__dot__active {
+    flex-grow: 1;
+    &:after {
+      animation: dotFill var(--dot-slide-time) var(--linear) forwards;
+      z-index: 10;
+    }
+  }
+}
+
+.loading__indicator {
+  display: flex;
+  min-height: 100svh;
+  align-items: center;
+  justify-content: center;
+  animation: loading 1300ms var(--ease-in-out-quint) infinite;
+
+  svg {
+    width: var(--spacing-44);
+  }
+}
+
+@keyframes dotFill {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: rotate(0);
+    scale: 1;
+  }
+
+  50% {
+    scale: 1.1;
+  }
+
+  100% {
+    transform: rotate(360deg);
+    scale: 1;
+  }
+}

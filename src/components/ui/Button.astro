@@ -1,0 +1,94 @@
+---
+import { type HTMLAttributes } from "astro/types";
+
+const btnVariants = {
+  default: "default",
+  withIcon: "with-icon",
+  icon: "icon",
+};
+
+const btnSizes = {
+  base: "base-size",
+  small: "small-size",
+};
+
+const { class: className, variant = "default", asLink, size, ...rest } = Astro.props as Props;
+
+interface ButtonProps extends HTMLAttributes<"button"> {
+  variant?: keyof typeof btnVariants;
+  size: keyof typeof btnSizes;
+  class?: string;
+}
+
+interface LinkProps extends HTMLAttributes<"a"> {
+  variant?: keyof typeof btnVariants;
+  size: keyof typeof btnSizes;
+  href: string;
+  class?: string;
+}
+
+type Props = (ButtonProps & { asLink?: false }) | (LinkProps & { asLink: true });
+---
+
+{
+  asLink ? (
+    <a {...(rest as ButtonProps)} class:list={["base", btnVariants[variant], className, btnSizes[size]]}>
+      <slot />
+    </a>
+  ) : (
+    <button {...(rest as ButtonProps)} class:list={["base", btnVariants[variant], className, btnSizes[size]]}>
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  /* base styling */
+  .base {
+    background: none;
+    padding-inline: var(--spacing-16);
+    padding-block: var(--spacing-8);
+    width: fit-content;
+    cursor: pointer;
+    border: none;
+    outline: 1px solid var(--base-dark);
+  }
+
+  /* variants */
+  .default {
+    background-color: var(--base-dark);
+    color: var(--base-light);
+    transition:
+      color var(--transition-300) var(--ease-in-out-quint),
+      background-color var(--transition-300) var(--ease-in-out-quint);
+
+    &:hover {
+      background-color: transparent;
+      color: var(--base-dark);
+      outline: 1px solid var(--base-dark);
+      transition:
+        color var(--transition-300) var(--ease-in-out-quint),
+        background-color var(--transition-300) var(--ease-in-out-quint);
+    }
+  }
+
+  .with-icon {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-8);
+    color: var(--base-light);
+  }
+
+  .icon {
+    aspect-ratio: var(--1-1);
+  }
+
+  /* sizes */
+  .base-size {
+    font-size: var(--text-base);
+  }
+
+  .small-size {
+    font-size: var(--text-xs);
+  }
+</style>

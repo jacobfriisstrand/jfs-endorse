@@ -42,6 +42,7 @@ const data = await fetchData<SiteData>(`{
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="src/globals.css" />
     {data._site.faviconMetaTags.map((tag) => <link rel={tag.attributes.rel} type={tag.attributes.type} sizes={tag.attributes.sizes} href={tag.attributes.href} />)}
     {seoMetaTags.map((tag: MetaTag) => <meta property={tag.attributes?.property} name={tag.attributes?.name} content={tag.attributes?.content} />)}
     <title>{seoMetaTags[0].content}</title>
@@ -50,26 +51,3 @@ const data = await fetchData<SiteData>(`{
     <slot />
   </body>
 </html>
-
-<style>
-  :root {
-  }
-
-  :global(img) {
-    max-width: 100%;
-    height: auto;
-  }
-
-  :global(*),
-  :global(*)::before,
-  :global(*)::after {
-    margin: 0;
-    padding: 0;
-  }
-
-  :global(h1) {
-  }
-
-  :global(h2) {
-  }
-</style>

@@ -1,11 +1,18 @@
 ---
-import HeroCarousel from "@/components/HeroCarousel.astro";
+import Heading from "@/components/ui/Heading.astro";
+import HeroCarousel from "@/components/HeroCarousel/HeroCarousel";
 import BaseLayout, { type MetaTag } from "@/layouts/BaseLayout.astro";
 import { fetchData } from "@/lib/fetchData";
+import Button from "@/components/ui/Button.astro";
 
 export interface HomepageProps {
   homepage: {
     _seoMetaTags: MetaTag[];
+    heroTitle: string;
+    heroButtonText: string;
+    heroButtonLink: {
+      pageSlug: string;
+    };
   };
 }
 
@@ -15,10 +22,24 @@ const data = await fetchData<HomepageProps>(`{
       content
       attributes
     }
+    heroTitle
+    heroButtonText
+    heroButtonLink {
+      pageSlug
+    }
   }
 }`);
+
+// Function to strip <p> tags
+function sanitizeDatoCmsHtml(html: string) {
+  return html.replace(/<\/?p>/g, "");
+}
+const sanitizedHeroTitle = sanitizeDatoCmsHtml(data.homepage.heroTitle);
 ---
 
 <BaseLayout seoMetaTags={data.homepage._seoMetaTags}>
-  <HeroCarousel />
+  <HeroCarousel client:load>
+    <Heading tag="h1" set:html={sanitizedHeroTitle} />
+    <Button size="base" asLink href={data.homepage.heroButtonLink.pageSlug} href={data.homepage.heroButtonLink.pageSlug}>{data.homepage.heroButtonText}</Button>
+  </HeroCarousel>
 </BaseLayout>
