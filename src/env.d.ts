@@ -1,7 +1,7 @@
 /// <reference path="../.astro/types.d.ts" />
 
 interface ImportMetaEnv {
-  readonly PUBLIC_DATO_CMS_TOKEN: string;
+  readonly DATO_CMS_TOKEN: string;
   // more env variables...
 }
 
