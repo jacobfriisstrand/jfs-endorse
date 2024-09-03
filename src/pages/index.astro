@@ -4,6 +4,7 @@ import HeroCarousel from "@/components/HeroCarousel/HeroCarousel";
 import BaseLayout, { type MetaTag } from "@/layouts/BaseLayout.astro";
 import { fetchData } from "@/lib/fetchData";
 import Button from "@/components/ui/Button.astro";
+import Preloader from "@/components/Preloader/Preloader";
 
 export interface HomepageProps {
   homepage: {
@@ -38,6 +39,7 @@ const sanitizedHeroTitle = sanitizeDatoCmsHtml(data.homepage.heroTitle);
 ---
 
 <BaseLayout seoMetaTags={data.homepage._seoMetaTags}>
+  <Preloader client:load />
   <HeroCarousel client:load>
     <Heading tag="h1" set:html={sanitizedHeroTitle} />
     <Button size="base" asLink href={data.homepage.heroButtonLink.pageSlug} href={data.homepage.heroButtonLink.pageSlug}>{data.homepage.heroButtonText}</Button>

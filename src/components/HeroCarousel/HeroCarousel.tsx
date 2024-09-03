@@ -7,7 +7,7 @@ import { fetchData } from "@/lib/fetchData";
 import styles from "./HeroCarousel.module.css";
 import { MaterialSymbolsArrowRightAlt } from "@/icons/MaterialSymbolsArrowRight";
 import { useEffect, useState } from "react";
-import Logo from "@/logo/Logo";
+import { Logo } from "@/logo/Logo";
 
 export interface HeroCarouselProps {
   allEndorsers: Endorser[];
