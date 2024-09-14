@@ -1,19 +1,18 @@
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
-import Fade from "embla-carousel-fade";
-import { NextButton, PrevButton, usePrevNextButtons } from "./EmblaCarouselArrowButtons";
-import { DotButton, useDotButton } from "./EmblaCarouselDotButton";
 import { fetchData } from "@/lib/fetchData";
 import styles from "./HeroCarousel.module.css";
-import { MaterialSymbolsArrowRightAlt } from "@/icons/MaterialSymbolsArrowRight";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { Logo } from "@/logo/Logo";
+import MaterialSymbolsArrowBack from "@/icons/MaterialSymbolsArrowBack";
+import MaterialSymbolsArrowForward from "@/icons/MaterialSymbolsArrowForward";
+import MaterialSymbolsArrowOutward from "@/icons/MaterialSymbolsArrowOutward";
 
 export interface HeroCarouselProps {
   allEndorsers: Endorser[];
 }
 
 export interface Endorser {
+  id: string;
+  position: number;
   endorserName: string;
   endorserTitle: string;
   endorserSlug: string;
@@ -29,6 +28,8 @@ export interface Endorser {
 
 const data = await fetchData<HeroCarouselProps>(`{
   allEndorsers {
+    id
+    position
     endorserName
     endorserTitle
     endorserSlug
@@ -52,26 +53,92 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-export default function HeroCarousel({ children }: { children: React.ReactNode }) {
+export default function HeroCarousel({ children }: Readonly<{ children: React.ReactNode }>) {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const slideRefs = useRef<(HTMLLIElement | null)[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [shuffledEndorsers, setShuffledEndorsers] = useState(data.allEndorsers);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [animationKey, setAnimationKey] = useState(0);
+  const liveRegionRef = useRef<HTMLDivElement>(null);
+  const slideTimer = 10000;
 
-  // delay for autoplay must be equal to --hero-slide-time variable in HerCarousel.module.css
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    {
-      loop: true,
+  const resetTimeout = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  }, []);
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % shuffledEndorsers.length);
+  }, [shuffledEndorsers.length]);
+
+  const updateLiveRegion = useCallback(
+    (index: number) => {
+      if (liveRegionRef.current) {
+        liveRegionRef.current.textContent = `Item ${index + 1} of ${shuffledEndorsers.length}`;
+      }
     },
-    [Fade(), Autoplay({ delay: 5000, playOnInit: true, stopOnInteraction: false })]
+    [shuffledEndorsers.length]
   );
 
-  const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
+  const changeSlide = useCallback(
+    (newIndex: number) => {
+      setCurrentIndex(newIndex);
+      setAnimationKey((prev) => prev + 1);
+      updateLiveRegion(newIndex);
 
-  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
+      setTimeout(() => {
+        if (slideRefs.current[newIndex]) {
+          slideRefs.current[newIndex]?.focus();
+        }
+      }, 100);
+    },
+    [updateLiveRegion]
+  );
+
+  const handlePrevious = useCallback(() => {
+    const newIndex = currentIndex === 0 ? shuffledEndorsers.length - 1 : currentIndex - 1;
+    changeSlide(newIndex);
+  }, [currentIndex, shuffledEndorsers.length, changeSlide]);
+
+  const handleNext = useCallback(() => {
+    const newIndex = (currentIndex + 1) % shuffledEndorsers.length;
+    changeSlide(newIndex);
+  }, [currentIndex, shuffledEndorsers.length, changeSlide]);
 
   useEffect(() => {
     setShuffledEndorsers(shuffleArray(data.allEndorsers));
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    resetTimeout();
+    timeoutRef.current = setTimeout(nextSlide, slideTimer);
+
+    return () => {
+      resetTimeout();
+    };
+  }, [currentIndex, nextSlide, resetTimeout, slideTimer]);
+
+  useEffect(() => {
+    setShuffledEndorsers(shuffleArray(data.allEndorsers));
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleNext();
+      setAnimationKey((prev) => prev + 1); // Reset animation here too
+    }, slideTimer);
+
+    return () => clearTimeout(timer);
+  }, [currentIndex, handleNext, slideTimer]);
+
+  useEffect(() => {
+    updateLiveRegion(currentIndex);
+  }, [currentIndex, updateLiveRegion]);
 
   if (isLoading) {
     return (
@@ -81,42 +148,42 @@ export default function HeroCarousel({ children }: { children: React.ReactNode }
     );
   }
 
-  // TODO remove drag on desktop
-  // TODO fix autoplay. bug when changing tab on browser
-
   return (
-    <section className={styles.hero}>
+    <section aria-labelledby="carouselheading" className={styles.hero}>
       <header className={styles.hero__header}>{children}</header>
-      <div className={`.embla ${styles.embla}`} ref={emblaRef}>
-        <div className={`embla__container ${styles.embla__container}`}>
-          {shuffledEndorsers.map((endorser: Endorser) => (
-            <article key={endorser.endorserName} className={`embla__slide ${styles.embla__slide}`}>
-              <img src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} width={endorser.endorserImage.responsiveImage.width} height={endorser.endorserImage.responsiveImage.height} />
+      <div className={styles.visually__hidden} aria-live="polite" ref={liveRegionRef} />
+      <ul>
+        {shuffledEndorsers.map((endorser: Endorser, index) => (
+          <li ref={(el) => (slideRefs.current[index] = el)} tabIndex={currentIndex === index ? 0 : -1} className={currentIndex === index ? styles.show : styles.hide} style={{ opacity: index === currentIndex ? 1 : 0 }} key={endorser.endorserName}>
+            <article className={styles.slide}>
+              <img src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
               <a href={`/${endorser.endorserSlug}`}>
-                <div>
-                  <h2>{endorser.endorserName}</h2>
-                  <p>{endorser.endorserTitle}</p>
-                </div>
-                <div className={styles.endorser__link__arrow}>
-                  <MaterialSymbolsArrowRightAlt />
-                </div>
+                <h2>
+                  {endorser.endorserName}{" "}
+                  <span>
+                    <MaterialSymbolsArrowOutward />
+                  </span>
+                </h2>
+                <p>{endorser.endorserTitle}</p>
               </a>
             </article>
-          ))}
-        </div>
-        <div className={`embla__controls ${styles.embla__controls}`}>
-          <div className={`embla__buttons ${styles.embla__buttons}`}>
-            <PrevButton className="" onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-            <NextButton className="" onClick={onNextButtonClick} disabled={nextBtnDisabled} />
-          </div>
-        </div>
-        <div className={`embla__dots ${styles.embla__dots}`}>
-          {scrollSnaps.map((_, index) => (
-            <DotButton key={index} onClick={() => onDotButtonClick(index)} className={`embla__dot ${styles.embla__dot} ${selectedIndex === index ? styles.embla__dot__active : ""}`}>
-              {children}
-            </DotButton>
-          ))}
-        </div>
+          </li>
+        ))}
+      </ul>
+      <div className={styles.carousel__dot__group}>
+        {shuffledEndorsers.map((endorser: Endorser, index) => (
+          <button role="tab" aria-selected={index === currentIndex} aria-label={`Slide ${index + 1}`} key={endorser.id} className={`${styles.dot} ${index === currentIndex ? styles.dot__active : ""}`} onClick={() => changeSlide(index)}>
+            {index === currentIndex && <div key={animationKey} style={{ animation: `${styles.dot__timer} ${slideTimer}ms linear` }} className={styles.dot__slider} aria-hidden />}
+          </button>
+        ))}
+      </div>
+      <div className={styles.carousel__controls}>
+        <button onClick={handlePrevious} aria-label="Tidligere slide" className={styles.carousel__button}>
+          <MaterialSymbolsArrowBack />
+        </button>
+        <button onClick={handleNext} aria-label="Næste slide" className={styles.carousel__button}>
+          <MaterialSymbolsArrowForward />
+        </button>
       </div>
     </section>
   );

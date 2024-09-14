@@ -14,8 +14,7 @@ button {
   cursor: pointer;
 }
 
-button:focus-visible,
-a:focus-visible {
+*:focus-visible {
   outline: 1px solid var(--base-dark);
   outline-offset: 2px;
 }
@@ -45,6 +44,7 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
+  text-wrap: balance;
 }
 
 body {
@@ -73,16 +73,15 @@ h6 {
   --font-serif: "Iowan Old Style", "Palatino Linotype", "URW Palladio L", P052, serif;
 
   /* Font sizes */
-  --text-input: 1rem;
-  --text-xs: 0.625rem;
-  --text-sm: 0.75rem;
-  --text-base: 0.875rem;
-  --text-md: 1.0625rem;
-  --text-lg: 1.25rem;
-  --text-xl: 1.5rem;
-  --text-2xl: 1.8125rem;
-  --text-3xl: 2.1875rem;
-  --text-4xl: 2.625rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+  --text-3xl: 3rem;
+  --text-4xl: 4rem;
 
   /* Line height */
   --line-height-body: 120%;
@@ -97,11 +96,15 @@ h6 {
   /* Spacing */
   --spacing-4: 0.25rem;
   --spacing-8: 0.5rem;
+  --spacing-12: 0.75rem;
   --spacing-16: 1rem;
   --spacing-20: 1.25rem;
   --spacing-24: 1.5rem;
+  --spacing-28: 1.75rem;
+  --spacing-36: 2.25rem;
   --spacing-44: 2.75rem;
   --spacing-60: 3.75rem;
+  --spacing-260: 16.25rem;
 
   /* Border Radius */
   --rounded-full: 9999px;
@@ -112,26 +115,14 @@ h6 {
   --16-9: 16 / 9;
 
   /* Transition Durations */
-  --transition-150: 150ms;
-  --transition-300: 300ms;
-  --transition-700: 700ms;
+  --duration-150: 150ms;
+  --duration-300: 300ms;
+  --duration-700: 700ms;
+  --duration-1500: 1500ms;
 
   /* Easings */
   --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
   --linear: linear;
-}
-
-/* HeroCarousel default styles for embla */
-
-.embla {
-  overflow: hidden;
-}
-.embla__container {
-  display: flex;
-}
-.embla__slide {
-  flex: 0 0 100%;
-  min-width: 0;
 }
 
 /* Animations */
@@ -142,5 +133,6 @@ html {
   background-color: var(--base-light);
   scroll-behavior: smooth;
   font-family: var(--font-sans);
+  font-size: var(--text-base);
   font-weight: var(--font-weight-light);
 }
