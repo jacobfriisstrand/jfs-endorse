@@ -4,6 +4,7 @@ import HeroCarousel from "@/components/HeroCarousel/HeroCarousel";
 import BaseLayout, { type MetaTag } from "@/layouts/BaseLayout.astro";
 import { fetchData } from "@/lib/fetchData";
 import Button from "@/components/ui/Button.astro";
+import AboutUsTeaser from "@/components/AboutUsTeaser.astro";
 
 export interface HomepageProps {
   homepage: {
@@ -41,4 +42,5 @@ const sanitizedHeroTitle = sanitizeDatoCmsHtml(data.homepage.heroTitle);
     <Heading size="lg" font="serif" id="carouselheading" tag="h1" set:html={sanitizedHeroTitle} />
     <Button size="base" asLink href={data.homepage.heroButtonLink.pageSlug} href={data.homepage.heroButtonLink.pageSlug}>{data.homepage.heroButtonText}</Button>
   </HeroCarousel>
+  <AboutUsTeaser />
 </BaseLayout>

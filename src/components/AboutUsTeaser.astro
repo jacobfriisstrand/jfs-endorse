@@ -1,0 +1,27 @@
+---
+import { fetchData } from "@/lib/fetchData";
+import Heading from "./ui/Heading.astro";
+
+export interface AboutUsTeaserProps {
+  homepage: {
+    aboutUsHeadline: string;
+    aboutUsText: string;
+  };
+}
+
+const data = await fetchData<AboutUsTeaserProps>(`{
+  homepage {
+    aboutUsHeadline
+    aboutUsText
+  }
+}`);
+
+console.log(data);
+---
+
+<Heading font="serif" tag="h3" size="lg">
+  {data.homepage.aboutUsHeadline}
+</Heading>
+<p>{data.homepage.aboutUsText}</p>
+
+<style></style>

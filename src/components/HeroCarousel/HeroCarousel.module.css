@@ -12,7 +12,8 @@
   height: 100svh;
   width: 100vw;
   position: fixed;
-
+  z-index: 1000;
+  background-color: var(--base-light);
   svg {
     max-width: var(--spacing-60);
     animation: loading_spinner 1s linear infinite;
