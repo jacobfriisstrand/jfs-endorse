@@ -109,10 +109,17 @@ h6 {
   /* Border Radius */
   --rounded-full: 9999px;
 
+  /* Border width */
+  --border-base: 1px;
+
   /* Aspect Ratio */
   --1-1: 1 / 1;
   --4-3: 4 / 3;
   --16-9: 16 / 9;
+
+  /* Opacity */
+  --opacity-50: 0.5;
+  --opacity-100: 1;
 
   /* Transition Durations */
   --duration-150: 150ms;

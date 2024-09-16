@@ -130,7 +130,7 @@ export default function HeroCarousel({ children }: Readonly<{ children: React.Re
   useEffect(() => {
     const timer = setTimeout(() => {
       handleNext();
-      setAnimationKey((prev) => prev + 1); // Reset animation here too
+      setAnimationKey((prev) => prev + 1);
     }, slideTimer);
 
     return () => clearTimeout(timer);
@@ -154,12 +154,12 @@ export default function HeroCarousel({ children }: Readonly<{ children: React.Re
       <div className={styles.visually__hidden} aria-live="polite" ref={liveRegionRef} />
       <ul>
         {shuffledEndorsers.map((endorser: Endorser, index) => (
-          <li ref={(el) => (slideRefs.current[index] = el)} tabIndex={currentIndex === index ? 0 : -1} className={currentIndex === index ? styles.show : styles.hide} style={{ opacity: index === currentIndex ? 1 : 0 }} key={endorser.endorserName}>
+          <li ref={(el) => (slideRefs.current[index] = el)} tabIndex={currentIndex === index ? 0 : -1} className={currentIndex === index ? styles.show : styles.hide} key={endorser.endorserName}>
             <article className={styles.slide}>
               <img src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
               <a href={`/${endorser.endorserSlug}`}>
                 <h2>
-                  {endorser.endorserName}{" "}
+                  {endorser.endorserName}
                   <span>
                     <MaterialSymbolsArrowOutward />
                   </span>

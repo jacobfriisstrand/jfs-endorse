@@ -58,17 +58,18 @@ type Props = (ButtonProps & { asLink?: false }) | (LinkProps & { asLink: true })
   .default {
     background-color: var(--base-dark);
     color: var(--base-light);
+    outline: var(--border-base) solid var(--base-dark);
     transition:
-      color var(--transition-300) var(--ease-in-out-quint),
-      background-color var(--transition-300) var(--ease-in-out-quint);
+      color var(--duration-300) var(--ease-in-out-quint),
+      background-color var(--duration-300) var(--ease-in-out-quint);
 
     &:hover {
       background-color: transparent;
       color: var(--base-dark);
-      outline: 1px solid var(--base-dark);
+      outline: var(--border-base) solid var(--base-dark);
       transition:
-        color var(--transition-300) var(--ease-in-out-quint),
-        background-color var(--transition-300) var(--ease-in-out-quint);
+        color var(--duration-300) var(--ease-in-out-quint),
+        background-color var(--duration-300) var(--ease-in-out-quint);
     }
   }
 

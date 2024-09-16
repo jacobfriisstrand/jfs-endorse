@@ -2,7 +2,21 @@
 
 :root {
   --universal-inline-padding: var(--spacing-20);
-  --dot-height: 8px;
+  --dot-height: var(--spacing-8);
+  --opacity-transition: opacity var(--duration-700) var(--linear);
+}
+
+.loading__indicator {
+  display: grid;
+  place-items: center;
+  height: 100svh;
+  width: 100vw;
+  position: fixed;
+
+  svg {
+    max-width: var(--spacing-60);
+    animation: loading_spinner 1s linear infinite;
+  }
 }
 
 .visually__hidden {
@@ -29,10 +43,23 @@
 
     h1 {
       margin-bottom: var(--spacing-20);
+
+      @container (width > 1024px) {
+        margin-bottom: var(--spacing-36);
+      }
     }
 
     @container (width > 1024px) {
       padding-left: var(--spacing-260);
+    }
+  }
+
+  h1 {
+    @container (width > 1024px) {
+      font-size: var(--text-2xl);
+      height: 2em;
+      text-wrap: balance;
+      width: 99%;
     }
   }
 }
@@ -55,7 +82,7 @@ li {
       min-height: 100%;
       min-width: 100%;
       object-fit: cover;
-      opacity: 0.5;
+      opacity: var(--opacity-50);
       filter: grayscale(100%);
     }
 
@@ -67,9 +94,32 @@ li {
       width: fit-content;
       height: fit-content;
 
+      &:hover {
+        h2 {
+          opacity: var(--opacity-50);
+          transition: opacity var(--duration-300) var(--ease-in-out-quint);
+        }
+
+        h2 span {
+          margin-left: var(--spacing-20);
+          transition: margin var(--duration-300) var(--ease-in-out-quint);
+        }
+      }
+
       h2 {
+        max-width: 50vw;
         font-size: var(--text-base);
         font-weight: var(--font-weight-regular);
+        transition: opacity var(--duration-300) var(--ease-in-out-quint);
+
+        span {
+          margin-left: var(--spacing-12);
+          transition: margin var(--duration-300) var(--ease-in-out-quint);
+        }
+
+        @container (width > 1024px) {
+          min-width: fit-content;
+        }
       }
 
       p {
@@ -105,17 +155,28 @@ li {
   button {
     min-height: var(--spacing-44);
     min-width: var(--spacing-44);
+    transition: opacity var(--duration-300) var(--linear);
+
+    &:hover {
+      opacity: var(--opacity-50);
+      transition: opacity var(--duration-300) var(--linear);
+    }
   }
 }
 
 .show {
   opacity: 1;
-  transition: opacity var(--duration-700) linear;
+  @media (prefers-reduced-motion: no-preference) {
+    transition: var(--opacity-transition);
+  }
 }
 
 .hide {
   opacity: 0;
-  transition: opacity var(--duration-700) linear;
+  @media (prefers-reduced-motion: no-preference) {
+    transition: var(--opacity-transition);
+  }
+  z-index: -1;
 }
 
 .carousel__dot__group {
@@ -142,6 +203,11 @@ li {
   background-color: var(--base-lightGray);
   border-radius: var(--rounded-full);
   transition: flex var(--duration-700) var(--ease-in-out-quint);
+
+  &:hover {
+    cursor: pointer;
+    opacity: var(--opacity-50);
+  }
 }
 
 .dot__active {
@@ -169,5 +235,19 @@ li {
   }
   100% {
     width: 100%;
+  }
+}
+
+@keyframes loading_spinner {
+  0% {
+    transform: rotate(0deg);
+    scale: 1;
+  }
+  50% {
+    scale: 1.2;
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }
