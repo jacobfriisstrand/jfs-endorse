@@ -12,6 +12,8 @@ button {
   border: none;
   background: none;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 a:focus-visible,
@@ -23,6 +25,8 @@ button:focus-visible {
 a {
   text-decoration: none;
   color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 li {
