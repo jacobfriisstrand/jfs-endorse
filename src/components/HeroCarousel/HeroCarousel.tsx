@@ -84,16 +84,18 @@ export default function HeroCarousel({ children }: Readonly<{ children: React.Re
   );
 
   const changeSlide = useCallback(
-    (newIndex: number) => {
+    (newIndex: number, event?: React.MouseEvent) => {
+      if (event) {
+        event.preventDefault();
+      }
       setCurrentIndex(newIndex);
       setAnimationKey((prev) => prev + 1);
       updateLiveRegion(newIndex);
 
-      setTimeout(() => {
-        if (slideRefs.current[newIndex]) {
-          slideRefs.current[newIndex]?.focus();
-        }
-      }, 100);
+      // Remove the setTimeout and scrollIntoView
+      if (slideRefs.current[newIndex]) {
+        slideRefs.current[newIndex]?.focus({ preventScroll: true });
+      }
     },
     [updateLiveRegion]
   );
@@ -154,7 +156,7 @@ export default function HeroCarousel({ children }: Readonly<{ children: React.Re
       <div className={styles.visually__hidden} aria-live="polite" ref={liveRegionRef} />
       <ul>
         {shuffledEndorsers.map((endorser: Endorser, index) => (
-          <li ref={(el) => (slideRefs.current[index] = el)} tabIndex={currentIndex === index ? 0 : -1} className={currentIndex === index ? styles.show : styles.hide} key={endorser.endorserName}>
+          <li ref={(el) => (slideRefs.current[index] = el)} className={currentIndex === index ? styles.show : styles.hide} key={endorser.endorserName}>
             <article className={styles.slide}>
               <img src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
               <a href={`/${endorser.endorserSlug}`}>

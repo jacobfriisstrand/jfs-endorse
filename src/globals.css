@@ -14,7 +14,8 @@ button {
   cursor: pointer;
 }
 
-*:focus-visible {
+a:focus-visible,
+button:focus-visible {
   outline: 1px solid var(--base-dark);
   outline-offset: 2px;
 }
@@ -22,6 +23,10 @@ button {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+li {
+  list-style: none;
 }
 
 img {
@@ -62,6 +67,9 @@ h6 {
 }
 
 :root {
+  /* Universal Padding */
+  --universal-inline-padding: var(--spacing-20);
+
   /* Colors */
   --base-dark: #131313;
   --base-light: #ffffff;
@@ -104,6 +112,7 @@ h6 {
   --spacing-36: 2.25rem;
   --spacing-44: 2.75rem;
   --spacing-60: 3.75rem;
+  --spacing-200: 12.5rem;
   --spacing-260: 16.25rem;
 
   /* Border Radius */
