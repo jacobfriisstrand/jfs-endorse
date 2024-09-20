@@ -48,6 +48,37 @@ const data = await fetchData<SiteData>(`{
     <title>{seoMetaTags[0].content}</title>
   </head>
   <body>
-    <slot />
+    <main>
+      <slot />
+    </main>
   </body>
 </html>
+
+<style is:global>
+  body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: [full-start] 1fr [col-1] 1fr [col-2] 1fr [col-3] 1fr [col-4] 1fr [col-5] 1fr [full-end];
+    column-gap: var(--spacing-20);
+  }
+
+  astro-island > * > * {
+    padding-inline: var(--universal-inline-padding);
+  }
+
+  main > * {
+    padding-inline: var(--universal-inline-padding);
+  }
+
+  main,
+  .full-bleed {
+    grid-column: full;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-content: start;
+
+    > :not(&) {
+      grid-column: full;
+    }
+  }
+</style>

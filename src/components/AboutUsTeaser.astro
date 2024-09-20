@@ -1,0 +1,54 @@
+---
+import { fetchData } from "@/lib/fetchData";
+import Heading from "./ui/Heading.astro";
+
+export interface AboutUsTeaserProps {
+  homepage: {
+    aboutUsHeadline: string;
+    aboutUsText: string;
+  };
+}
+
+const data = await fetchData<AboutUsTeaserProps>(`{
+  homepage {
+    aboutUsHeadline
+    aboutUsText
+  }
+}`);
+---
+
+<section class="full-bleed">
+  <Heading classes="about-us-teaser-heading" font="serif" tag="h3" size="lg">
+    {data.homepage.aboutUsHeadline}
+  </Heading>
+  <p>{data.homepage.aboutUsText}</p>
+</section>
+
+<style>
+  section {
+    color: var(--base-dark);
+    padding-block: var(--spacing-60);
+  }
+
+  section > * {
+    grid-column: full;
+  }
+
+  p {
+    margin-top: var(--spacing-24);
+  }
+
+  @media (min-width: 1024px) {
+    section > * {
+      grid-column: col-1 / col-4;
+    }
+
+    h3 {
+      font-size: var(--text-xl);
+    }
+
+    section {
+      margin-bottom: var(--spacing-200);
+    }
+  }
+</style>

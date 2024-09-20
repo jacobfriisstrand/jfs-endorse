@@ -1,67 +1,23 @@
-import { fetchData } from "@/lib/fetchData";
 import styles from "./HeroCarousel.module.css";
+import { shuffleArray } from "@/lib/shuffleArray";
 import { useCallback, useEffect, useState, useRef } from "react";
 import { Logo } from "@/logo/Logo";
 import MaterialSymbolsArrowBack from "@/icons/MaterialSymbolsArrowBack";
 import MaterialSymbolsArrowForward from "@/icons/MaterialSymbolsArrowForward";
 import MaterialSymbolsArrowOutward from "@/icons/MaterialSymbolsArrowOutward";
+import type { Endorser } from "@/lib/types";
+import type { HeroCarouselProps } from "@/pages/index.astro";
 
-export interface HeroCarouselProps {
-  allEndorsers: Endorser[];
-}
-
-export interface Endorser {
-  id: string;
-  position: number;
-  endorserName: string;
-  endorserTitle: string;
-  endorserSlug: string;
-  endorserImage: {
-    responsiveImage: {
-      src: string;
-      width: number;
-      height: number;
-      alt: string;
-    };
-  };
-}
-
-const data = await fetchData<HeroCarouselProps>(`{
-  allEndorsers {
-    id
-    position
-    endorserName
-    endorserTitle
-    endorserSlug
-    endorserImage {
-        responsiveImage(imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "16:9"}) {
-        src
-        width
-        height
-        alt
-      }
-    }
-  }
-}`);
-
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
-
-export default function HeroCarousel({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function HeroCarousel({ children, allEndorsers }: Readonly<{ children: React.ReactNode }> & HeroCarouselProps) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const slideRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [shuffledEndorsers, setShuffledEndorsers] = useState(data.allEndorsers);
+  const [shuffledEndorsers, setShuffledEndorsers] = useState(allEndorsers as Endorser[]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [animationKey, setAnimationKey] = useState(0);
   const liveRegionRef = useRef<HTMLDivElement>(null);
+
   const slideTimer = 10000;
 
   const resetTimeout = useCallback(() => {
@@ -84,16 +40,17 @@ export default function HeroCarousel({ children }: Readonly<{ children: React.Re
   );
 
   const changeSlide = useCallback(
-    (newIndex: number) => {
+    (newIndex: number, event?: React.MouseEvent) => {
+      if (event) {
+        event.preventDefault();
+      }
       setCurrentIndex(newIndex);
       setAnimationKey((prev) => prev + 1);
       updateLiveRegion(newIndex);
 
-      setTimeout(() => {
-        if (slideRefs.current[newIndex]) {
-          slideRefs.current[newIndex]?.focus();
-        }
-      }, 100);
+      if (slideRefs.current[newIndex]) {
+        slideRefs.current[newIndex]?.focus({ preventScroll: true });
+      }
     },
     [updateLiveRegion]
   );
@@ -109,7 +66,7 @@ export default function HeroCarousel({ children }: Readonly<{ children: React.Re
   }, [currentIndex, shuffledEndorsers.length, changeSlide]);
 
   useEffect(() => {
-    setShuffledEndorsers(shuffleArray(data.allEndorsers));
+    setShuffledEndorsers(shuffleArray(allEndorsers as Endorser[]));
     setIsLoading(false);
   }, []);
 
@@ -123,7 +80,7 @@ export default function HeroCarousel({ children }: Readonly<{ children: React.Re
   }, [currentIndex, nextSlide, resetTimeout, slideTimer]);
 
   useEffect(() => {
-    setShuffledEndorsers(shuffleArray(data.allEndorsers));
+    setShuffledEndorsers(shuffleArray(allEndorsers));
     setIsLoading(false);
   }, []);
 
@@ -154,9 +111,9 @@ export default function HeroCarousel({ children }: Readonly<{ children: React.Re
       <div className={styles.visually__hidden} aria-live="polite" ref={liveRegionRef} />
       <ul>
         {shuffledEndorsers.map((endorser: Endorser, index) => (
-          <li ref={(el) => (slideRefs.current[index] = el)} tabIndex={currentIndex === index ? 0 : -1} className={currentIndex === index ? styles.show : styles.hide} key={endorser.endorserName}>
+          <li ref={(el) => (slideRefs.current[index] = el)} className={`${styles.slide__container} ${currentIndex === index ? styles.show : styles.hide}`} key={endorser.endorserName}>
             <article className={styles.slide}>
-              <img src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
+              <img loading={index === 0 ? "eager" : "lazy"} fetchPriority="high" src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
               <a href={`/${endorser.endorserSlug}`}>
                 <h2>
                   {endorser.endorserName}

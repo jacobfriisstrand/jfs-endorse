@@ -1,13 +1,13 @@
 ---
 import { type HTMLAttributes } from "astro/types";
 import "@/globals.css";
-const { tag, class: className, size, font } = Astro.props;
+const { tag, classes, size, font, ...rest } = Astro.props;
 const Tag = tag;
 
 interface Props extends HTMLAttributes<"h1"> {
   tag: string;
   size: keyof typeof headingSizes;
-  class?: string;
+  classes?: string;
   font: keyof typeof headingFonts;
 }
 
@@ -28,7 +28,7 @@ const headingFonts = {
 };
 ---
 
-<Tag class:list={["base", className, headingSizes[size], headingFonts[font]]}>
+<Tag {...rest} class:list={["base", headingSizes[size], headingFonts[font], classes]}>
   <slot />
 </Tag>
 
