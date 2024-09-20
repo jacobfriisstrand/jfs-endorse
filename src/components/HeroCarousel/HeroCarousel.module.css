@@ -11,6 +11,7 @@
   height: 100svh;
   width: 100vw;
   position: fixed;
+
   z-index: 1000;
   background-color: var(--base-light);
   svg {
@@ -32,7 +33,7 @@
 }
 
 .hero {
-  height: 90svh;
+  height: 90dvh;
   grid-column: full;
   container: hero / inline-size;
 
@@ -64,7 +65,7 @@
   }
 }
 
-li {
+.slide__container {
   position: absolute;
   top: 0;
   left: 0;
@@ -79,7 +80,7 @@ li {
     height: 100%;
 
     img {
-      min-height: 100%;
+      height: 100%;
       min-width: 100%;
       object-fit: cover;
       opacity: var(--opacity-50);

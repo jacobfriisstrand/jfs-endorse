@@ -5,6 +5,8 @@ import BaseLayout, { type MetaTag } from "@/layouts/BaseLayout.astro";
 import { fetchData } from "@/lib/fetchData";
 import Button from "@/components/ui/Button.astro";
 import AboutUsTeaser from "@/components/AboutUsTeaser.astro";
+import GallerySection from "@/components/GallerySection.astro";
+import sanitizeDatoCmsHtml from "@/lib/sanitizeDatoCmsHtml";
 
 export interface HomepageProps {
   homepage: {
@@ -17,7 +19,25 @@ export interface HomepageProps {
   };
 }
 
-const data = await fetchData<HomepageProps>(`{
+export interface HeroCarouselProps {
+  allEndorsers: {
+    id: string;
+    position: number;
+    endorserName: string;
+    endorserTitle: string;
+    endorserSlug: string;
+    endorserImage: {
+      responsiveImage: {
+        src: string;
+        width: number;
+        height: number;
+        alt: string;
+      };
+    };
+  }[];
+}
+
+const data = await fetchData<HomepageProps & HeroCarouselProps>(`{
   homepage {
     _seoMetaTags {
       content
@@ -29,18 +49,29 @@ const data = await fetchData<HomepageProps>(`{
       pageSlug
     }
   }
+  allEndorsers {
+    id
+    position
+    endorserName
+    endorserTitle
+    endorserSlug
+    endorserImage {
+      responsiveImage(imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "16:9"}) {
+        src
+        width
+        height
+        alt
+      }
+    }
+  }
 }`);
-
-function sanitizeDatoCmsHtml(html: string) {
-  return html.replace(/<\/?p>/g, "");
-}
-const sanitizedHeroTitle = sanitizeDatoCmsHtml(data.homepage.heroTitle);
 ---
 
 <BaseLayout seoMetaTags={data.homepage._seoMetaTags}>
-  <HeroCarousel client:load>
-    <Heading size="lg" font="serif" id="carouselheading" tag="h1" set:html={sanitizedHeroTitle} />
+  <HeroCarousel client:load allEndorsers={data.allEndorsers}>
+    <Heading size="lg" font="serif" id="carouselheading" tag="h1" set:html={sanitizeDatoCmsHtml(data.homepage.heroTitle)} />
     <Button size="base" asLink href={data.homepage.heroButtonLink.pageSlug} href={data.homepage.heroButtonLink.pageSlug}>{data.homepage.heroButtonText}</Button>
   </HeroCarousel>
   <AboutUsTeaser />
+  <GallerySection allEndorsers={data.allEndorsers} />
 </BaseLayout>

@@ -1,0 +1,138 @@
+---
+import { fetchData } from "@/lib/fetchData";
+import type { Endorser } from "@/lib/types";
+import { StructuredText } from "@datocms/astro";
+import { Image } from "astro:assets";
+import { shuffleArray } from "@/lib/shuffleArray";
+
+const { allEndorsers } = Astro.props;
+
+export interface GallerySectionProps {
+  homepage: {
+    gallerySectionHeadline: {
+      value: any;
+    };
+  };
+}
+
+const data = await fetchData<GallerySectionProps>(`{
+  homepage {
+    gallerySectionHeadline {
+      value
+    }
+  }
+}`);
+
+const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
+---
+
+<section class="full-bleed">
+  <div class="headline">
+    <StructuredText data={data.homepage.gallerySectionHeadline} />
+  </div>
+  <ul class="gallery">
+    {
+      shuffledEndorsers.map((endorser: Endorser) => (
+        <li class="gallery__item">
+          <a title={endorser.endorserName} href={endorser.endorserSlug}>
+            <Image src={endorser.endorserImage.responsiveImage.src} width={endorser.endorserImage.responsiveImage.width} height={endorser.endorserImage.responsiveImage.height} alt={endorser.endorserImage.responsiveImage.alt} />
+            <div>
+              <p>{endorser.endorserName}</p>
+              <p>{endorser.endorserTitle}</p>
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <style>
+    .gallery__image {
+      object-fit: cover;
+    }
+
+    section {
+      background-color: var(--base-dark);
+      color: var(--base-light);
+      padding-block: var(--spacing-16);
+    }
+
+    .headline {
+      position: sticky;
+      height: fit-content;
+      top: var(--spacing-16);
+      font-family: var(--sans);
+      grid-column: full-start / col-3;
+
+      @media (min-width: 1024px) {
+        font-family: var(--font-serif);
+        font-size: var(--text-lg);
+      }
+    }
+
+    .gallery {
+      @media (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-20);
+      }
+
+      display: grid;
+      row-gap: var(--spacing-20);
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(5, 1fr);
+      grid-auto-flow: row dense;
+      grid-column: col-3 / full-end;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(100%);
+        @media (min-width: 1024px) {
+          opacity: 0.7;
+        }
+      }
+
+      .gallery__item {
+        position: relative;
+        width: 100%;
+        transition: opacity var(--duration-300) var(--ease-in-out-quint);
+
+        div {
+          transition:
+            opacity var(--duration-300) var(--ease-in-out-quint),
+            transform var(--duration-300) var(--ease-in-out-quint);
+          transform: translateY(-10%);
+          position: absolute;
+          bottom: var(--spacing-8);
+          left: var(--spacing-8);
+          opacity: 0;
+          @media (min-width: 1024px) {
+            opacity: 1;
+          }
+        }
+      }
+
+      .gallery__item:not(:hover) {
+        @media ((min-width: 1024px)) {
+          opacity: 0.5;
+        }
+
+        transition: opacity var(--duration-300) var(--ease-in-out-quint);
+
+        div {
+          opacity: 0;
+          transition:
+            opacity var(--duration-300) var(--ease-in-out-quint),
+            transform var(--duration-300) var(--ease-in-out-quint);
+          transform: translateY(0);
+        }
+      }
+
+      .gallery__item:nth-child(3n + 1),
+      .gallery__item:nth-child(5n + 1) {
+        grid-column: span 2;
+      }
+    }
+  </style>
+</section>

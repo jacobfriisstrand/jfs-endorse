@@ -62,16 +62,12 @@ const data = await fetchData<SiteData>(`{
     column-gap: var(--spacing-20);
   }
 
-  main > * > * > * {
+  astro-island > * > * {
     padding-inline: var(--universal-inline-padding);
   }
 
   main > * {
     padding-inline: var(--universal-inline-padding);
-
-    @media (min-width: 1024px) {
-      padding-inline: 0;
-    }
   }
 
   main,
@@ -82,7 +78,7 @@ const data = await fetchData<SiteData>(`{
     align-content: start;
 
     > :not(&) {
-      grid-column: col-1 / col-5;
+      grid-column: full;
     }
   }
 </style>
