@@ -1,0 +1,103 @@
+---
+import { fetchData } from "@/lib/fetchData";
+import { StructuredText } from "@datocms/astro";
+import Heading from "./ui/Heading.astro";
+import Button from "./ui/Button.astro";
+
+interface ContactSectionProps {
+  homepage: {
+    contactHeader: string;
+    contactText: {
+      value: any;
+    };
+  };
+  generalInfo: {
+    phone: string;
+  };
+}
+
+const data = await fetchData<ContactSectionProps>(`{
+  homepage {
+    contactHeader
+    contactText {
+    value
+    }
+  }
+  generalInfo {
+    phone
+  }
+}`);
+---
+
+<section>
+  <div class="contact-content">
+    <Heading tag="h3" size="2xl" font="serif">{data.homepage.contactHeader}</Heading>
+    <div>
+      <StructuredText data={data.homepage.contactText} />
+      <div class="separator">|</div>
+      <a href={`tel:${data.generalInfo.phone}`}>{data.generalInfo.phone}</a>
+    </div>
+  </div>
+  <form>
+    <div>
+      <label for="name">Navn</label>
+      <input name="name" type="text" />
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input name="email" type="text" />
+    </div>
+    <div>
+      <label for="phone">Telefon</label>
+      <input name="phone" type="text" />
+    </div>
+    <div>
+      <label for="subject">Emne</label>
+      <input name="subject" type="text" />
+    </div>
+    <div>
+      <label for="message">Besked</label>
+      <textarea name="message"></textarea>
+    </div>
+    <Button variant="default" size="base" type="submit">Submit</Button>
+  </form>
+</section>
+
+<style>
+  section {
+    display: grid;
+    gap: var(--spacing-32);
+  }
+
+  .contact-content {
+    display: grid;
+    gap: var(--spacing-32);
+
+    .separator {
+      color: var(--base-lightGray);
+    }
+  }
+
+  form {
+    background-color: var(--base-lighterGray);
+    display: grid;
+    gap: var(--spacing-20);
+    padding: var(--spacing-20);
+
+    label {
+      font-size: var(--text-xs);
+    }
+
+    input {
+      font-size: var(--text-base);
+      padding: var(--spacing-4);
+      padding-left: var(--spacing-8);
+      border: 1px solid var(--base-dark);
+    }
+
+    div {
+      display: grid;
+      gap: var(--spacing-4);
+    }
+  }
+</style>

@@ -8,6 +8,7 @@ import AboutUsTeaser from "@/components/AboutUsTeaser.astro";
 import GallerySection from "@/components/GallerySection.astro";
 import sanitizeDatoCmsHtml from "@/lib/sanitizeDatoCmsHtml";
 import BrandCollabs from "@/components/BrandCollabs.astro";
+import ContactSection from "@/components/ContactSection.astro";
 
 export interface HomepageProps {
   homepage: {
@@ -76,4 +77,5 @@ const data = await fetchData<HomepageProps & HeroCarouselProps>(`{
   <AboutUsTeaser />
   <GallerySection allEndorsers={data.allEndorsers} />
   <BrandCollabs />
+  <ContactSection />
 </BaseLayout>
