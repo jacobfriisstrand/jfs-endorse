@@ -1,0 +1,149 @@
+---
+import { fetchData } from "@/lib/fetchData";
+import Heading from "./ui/Heading.astro";
+import { Image } from "astro:assets";
+
+export interface BrandCollabProps {
+  query: {
+    brandCollabTeaser: string;
+    brandCollabHeadline: string;
+  };
+  allCases: CaseItem[];
+}
+
+export interface CaseItem {
+  caseClientLogo: {
+    url: string;
+    alt: string;
+    width: number;
+    height: number;
+  };
+  slug: string;
+}
+
+const data = await fetchData<BrandCollabProps>(`{
+  query: homepage {
+    brandCollabTeaser
+    brandCollabHeadline
+  }
+  allCases {
+    caseClientLogo {
+      url
+      alt
+      width
+      height
+    }
+    slug
+  }
+}`);
+
+console.log(data.allCases.length);
+---
+
+<section class="full-bleed">
+  <p>{data.query.brandCollabTeaser}</p>
+  <div class="collab-section">
+    <header>
+      <Heading font="serif" tag="h3" size="xl">{data.query.brandCollabHeadline}</Heading>
+    </header>
+    <div class="marquee fadeout-horizontal" style=`--numItems: ${data.allCases.length}`>
+      <ul class="marquee-track">
+        {
+          data.allCases.map((caseItem: CaseItem, index) => (
+            <li class="marquee-item" style={`--item-position: ${index + 1}`}>
+              <a href={caseItem.slug}>
+                <Image src={caseItem.caseClientLogo.url} alt={caseItem.caseClientLogo.alt} width={caseItem.caseClientLogo.width} height={caseItem.caseClientLogo.height} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  section {
+    margin-top: var(--spacing-52);
+
+    @media (min-width: 1024px) {
+      margin-top: var(--spacing-36);
+    }
+  }
+
+  section p {
+    grid-column: full;
+
+    @media (min-width: 1024px) {
+      grid-column: col-1 / col-4;
+    }
+  }
+
+  header h3 {
+    font-size: var(--text-md);
+    text-align: center;
+
+    @media (min-width: 1024px) {
+      font-size: var(--text-xl);
+    }
+  }
+
+  .collab-section {
+    margin-block: var(--spacing-56);
+
+    @media (min-width: 1024px) {
+      margin-block: var(--spacing-152);
+    }
+  }
+
+  .marquee {
+    max-width: 1000px;
+    margin-inline: auto;
+    margin-top: var(--spacing-44);
+    overflow: hidden;
+    --speed: 40s;
+    --single-slide-speed: calc(var(--speed) / var(--numItems));
+    --item-width: var(--spacing-72);
+    --item-gap: var(--spacing-84);
+    --item-width-plus-gap: calc(var(--item-width) + var(--item-gap));
+    --track-width: calc(var(--item-width-plus-gap) * calc(var(--numItems) - 1));
+  }
+
+  .marquee-track {
+    display: grid;
+    container-type: inline-size;
+    grid-template-columns: var(--track-width) [track] 0px [resting];
+    width: max-content;
+
+    &:hover > .marquee-item {
+      animation-play-state: paused;
+    }
+  }
+
+  .marquee-item {
+    animation: marquee-move var(--speed) linear infinite;
+    grid-area: resting;
+    width: var(--item-width);
+    aspect-ratio: var(--1-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation-delay: calc(var(--single-slide-speed) * var(--item-position) * -1);
+    filter: grayscale(100%);
+    transition: filter var(--duration-300) var(--ease-in-out-quint);
+    &:hover {
+      filter: grayscale(0%);
+      transition: filter var(--duration-300) var(--ease-in-out-quint);
+    }
+  }
+
+  @keyframes marquee-move {
+    to {
+      transform: translateX(calc(-100cqw - 100%));
+    }
+  }
+
+  .fadeout-horizontal {
+    mask-image: linear-gradient(to right, transparent, black 5rem, black calc(100% - 5rem), transparent);
+  }
+</style>
