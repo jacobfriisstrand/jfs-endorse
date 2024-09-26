@@ -1,8 +1,10 @@
 ---
 const { seoMetaTags } = Astro.props;
-
 import Footer from "@/components/Footer.astro";
+import Navigation from "@/components/Navigation/Navigation";
+import Button from "@/components/ui/Button.astro";
 import { fetchData } from "@/lib/fetchData";
+import { Icon } from "astro-icon/components";
 export interface MetaTag {
   tag: string;
   content?: string;
@@ -26,6 +28,9 @@ export interface SiteData {
   _site: {
     faviconMetaTags: FaviconMetaTag[];
   };
+  generalInfo: {
+    contactButtonText: string;
+  };
 }
 
 const data = await fetchData<SiteData>(`{
@@ -35,6 +40,9 @@ const data = await fetchData<SiteData>(`{
       attributes
     }
   }
+    generalInfo {
+    contactButtonText
+    }
 }`);
 ---
 
@@ -49,6 +57,7 @@ const data = await fetchData<SiteData>(`{
     <title>{seoMetaTags[0].content}</title>
   </head>
   <body>
+    <Navigation client:load><Button asLink href="#contact" variant="default" rounded size="base"><Icon name="MailSymbol" />{data.generalInfo.contactButtonText}</Button></Navigation>
     <main>
       <slot />
     </main>
