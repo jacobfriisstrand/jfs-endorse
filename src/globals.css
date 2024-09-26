@@ -43,6 +43,7 @@ button,
 textarea,
 select {
   font: inherit;
+  font-size: var(--text-base);
 }
 
 p,

@@ -1,0 +1,72 @@
+@import "../../globals.css";
+
+.input__error {
+  color: red;
+}
+
+form {
+  display: grid;
+  gap: var(--spacing-20);
+  padding: var(--spacing-20);
+  background-color: var(--base-lighterGray);
+  grid-column: full;
+  margin-top: var(--spacing-20);
+
+  @media (min-width: 1024px) {
+    grid-column: col-3 / col-5;
+    margin-top: 0;
+  }
+  div {
+    display: grid;
+    gap: var(--spacing-8);
+
+    input,
+    textarea {
+      padding-left: var(--spacing-8);
+      padding-block: var(--spacing-8);
+      border-radius: 0;
+      border: 1px solid var(--base-lightGray);
+
+      &:focus-visible {
+        outline: none;
+        outline: 1px solid var(--base-dark);
+      }
+    }
+  }
+}
+
+.label__group {
+  display: flex;
+  font-size: var(--text-xs);
+  align-items: center;
+  line-height: 1.1;
+  justify-content: space-between;
+}
+
+.toast {
+  position: fixed;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+  bottom: 50%;
+  right: 50%;
+  transform: translate(50%, 50%);
+  z-index: 100;
+  background-color: var(--base-lighterGray);
+  color: var(--base-dark);
+  border: 1px solid var(--base-lightGray);
+  padding-block: var(--spacing-12);
+  padding-inline: var(--spacing-20);
+}
+
+.fadeOut {
+  animation: fadeOut 0.5s ease-out 4.5s forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

@@ -26,6 +26,10 @@
   border: 0;
 }
 
+.hero > * {
+  padding-inline: var(--spacing-20);
+}
+
 .hero {
   --dot-height: var(--spacing-8);
   --opacity-transition: opacity var(--duration-700) var(--linear);
@@ -50,6 +54,10 @@
 
     @container (width > 1024px) {
       padding-left: var(--spacing-260);
+    }
+
+    a {
+      max-width: fit-content;
     }
   }
 

@@ -113,7 +113,7 @@ export default function HeroCarousel({ children, allEndorsers }: Readonly<{ chil
         {shuffledEndorsers.map((endorser: Endorser, index) => (
           <li ref={(el) => (slideRefs.current[index] = el)} className={`${styles.slide__container} ${currentIndex === index ? styles.show : styles.hide}`} key={endorser.endorserName}>
             <article className={styles.slide}>
-              <img loading={index === 0 ? "eager" : "lazy"} fetchPriority="high" src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
+              <img loading={index === 0 ? "eager" : "lazy"} src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
               <a href={`/${endorser.endorserSlug}`}>
                 <h2>
                   {endorser.endorserName}

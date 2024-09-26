@@ -46,9 +46,12 @@ type Props = (ButtonProps & { asLink?: false }) | (LinkProps & { asLink: true })
   /* base styling */
   .base {
     background: none;
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-8);
+    align-items: center;
     padding-inline: var(--spacing-16);
     padding-block: var(--spacing-8);
-    width: fit-content;
     cursor: pointer;
     border: none;
     outline: 1px solid var(--base-dark);
@@ -71,17 +74,6 @@ type Props = (ButtonProps & { asLink?: false }) | (LinkProps & { asLink: true })
         color var(--duration-300) var(--ease-in-out-quint),
         background-color var(--duration-300) var(--ease-in-out-quint);
     }
-  }
-
-  .with-icon {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-8);
-    color: var(--base-light);
-  }
-
-  .icon {
-    aspect-ratio: var(--1-1);
   }
 
   /* sizes */
