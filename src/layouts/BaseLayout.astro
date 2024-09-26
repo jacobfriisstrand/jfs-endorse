@@ -1,6 +1,7 @@
 ---
 const { seoMetaTags } = Astro.props;
 
+import Footer from "@/components/Footer.astro";
 import { fetchData } from "@/lib/fetchData";
 export interface MetaTag {
   tag: string;
@@ -51,6 +52,7 @@ const data = await fetchData<SiteData>(`{
     <main>
       <slot />
     </main>
+    <Footer />
   </body>
 </html>
 

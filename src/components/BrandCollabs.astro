@@ -137,13 +137,15 @@ console.log(data.allCases.length);
     }
   }
 
-  @keyframes marquee-move {
-    to {
-      transform: translateX(calc(-100cqw - 100%));
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes marquee-move {
+      to {
+        transform: translateX(calc(-100cqw - 100%));
+      }
     }
   }
 
   .fadeout-horizontal {
-    mask-image: linear-gradient(to right, transparent, black 5rem, black calc(100% - 5rem), transparent);
+    mask-image: linear-gradient(to right, transparent, var(--base-dark) 5rem, var(--base-dark) calc(100% - 5rem), transparent);
   }
 </style>

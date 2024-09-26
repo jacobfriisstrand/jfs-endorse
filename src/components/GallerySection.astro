@@ -88,8 +88,9 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
         height: 100%;
         object-fit: cover;
         filter: grayscale(100%);
+        transition: opacity var(--duration-300) var(--ease-in-out-quint);
         @media (min-width: 1024px) {
-          opacity: 0.7;
+          opacity: 1;
         }
       }
 
@@ -114,10 +115,6 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
       }
 
       .gallery__item:not(:hover) {
-        @media ((min-width: 1024px)) {
-          opacity: 0.5;
-        }
-
         transition: opacity var(--duration-300) var(--ease-in-out-quint);
 
         div {
@@ -127,6 +124,10 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
             transform var(--duration-300) var(--ease-in-out-quint);
           transform: translateY(0);
         }
+      }
+
+      .gallery__item:hover img {
+        opacity: 0.5;
       }
 
       .gallery__item:nth-child(3n + 1),

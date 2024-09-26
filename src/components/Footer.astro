@@ -1,0 +1,217 @@
+---
+import { fetchData } from "@/lib/fetchData";
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+import Heading from "./ui/Heading.astro";
+
+export interface FooterProps {
+  generalInfo: {
+    tagline: string;
+    email: string;
+    phone: string;
+    addressRoad: string;
+    addressHouseNumber: string;
+    addressZipCode: string;
+    addressCity: string;
+    cvrNumber: string;
+    socialMedia: {
+      socialMediaLink: string;
+      platformName: string;
+    }[];
+    officialCompanyName: string;
+    lightLogo: {
+      url: string;
+      alt: string;
+      width: number;
+      height: number;
+    };
+  };
+}
+
+const data = await fetchData<FooterProps>(`{
+  generalInfo {
+    tagline
+    email
+    phone
+    addressRoad
+    addressHouseNumber
+    addressZipCode
+    addressCity
+    cvrNumber
+    socialMedia {
+      socialMediaLink
+      platformName
+    }
+    officialCompanyName
+    lightLogo {
+      url
+      alt
+      width
+      height
+    }
+  }
+  
+}`);
+---
+
+<footer class="full-bleed" style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}>
+  <address>
+    <div class="content">
+      <div class="marquee-text fadeout-horizontal">
+        <div class="marquee-text-track">
+          <Heading class={"tagline-heading"} tag="h4" size="4xl" font="serif">{data.generalInfo.tagline}</Heading>
+          <Heading aria-hidden class={"tagline-heading"} tag="h4" size="4xl" font="serif">{data.generalInfo.tagline}</Heading>
+          <Heading aria-hidden class={"tagline-heading"} tag="h4" size="4xl" font="serif">{data.generalInfo.tagline}</Heading>
+          <Heading aria-hidden class={"tagline-heading"} tag="h4" size="4xl" font="serif">{data.generalInfo.tagline}</Heading>
+        </div>
+      </div>
+      <div class="content-info">
+        <Image class="logo" src={data.generalInfo.lightLogo.url} alt={data.generalInfo.lightLogo.alt} width={data.generalInfo.lightLogo.width} height={data.generalInfo.lightLogo.height} />
+        <div class="contact-group">
+          <a target="_blank" href=`mailto:${data.generalInfo.email}`>{data.generalInfo.email}</a>
+          <a target="_blank" href={`tel:+45${data.generalInfo.phone}`}>+45{data.generalInfo.phone}</a>
+        </div>
+        <div class="address-cvr-group">
+          <div>
+            <p>{data.generalInfo.addressRoad} {data.generalInfo.addressHouseNumber}</p>
+            <p>{data.generalInfo.addressZipCode} {data.generalInfo.addressCity}</p>
+          </div>
+          <div class="cvr-group">
+            <span>CVR</span>
+            <p>{data.generalInfo.cvrNumber}</p>
+          </div>
+        </div>
+        <div class="social-media-group">
+          {
+            data.generalInfo.socialMedia.map((socialMedia: { socialMediaLink: string; platformName: string }) => (
+              <a target="_blank" href={socialMedia.socialMediaLink}>
+                <Icon name={socialMedia.platformName} />
+              </a>
+            ))
+          }
+        </div>
+        <hr />
+        <p>© {new Date().getFullYear()} {data.generalInfo.officialCompanyName}</p>
+      </div>
+    </div>
+  </address>
+</footer>
+
+<style>
+  :root {
+    --footer-height: 35rem;
+  }
+
+  footer {
+    background-color: var(--base-dark);
+    padding-inline: var(--spacing-20);
+    padding-block: var(--spacing-32);
+    position: relative;
+    height: var(--footer-height);
+  }
+
+  address {
+    font: inherit;
+    position: relative;
+    height: calc(100vh + var(--footer-height) - var(--spacing-32));
+    top: -100vh;
+  }
+
+  .content {
+    height: var(--footer-height);
+    padding-block: var(--spacing-32);
+    position: sticky;
+    color: var(--base-light);
+    top: calc(100vh - var(--footer-height));
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+
+  .content-info {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: var(--spacing-32);
+
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+      & > *:not(.logo) {
+        grid-column: 1;
+      }
+      .logo {
+        grid-column: 2;
+        margin-left: auto;
+        grid-row: 5;
+      }
+    }
+  }
+
+  .marquee-text {
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .marquee-text-track {
+    display: flex;
+    gap: var(--spacing-20);
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-28);
+    animation: marquee-move-text 20s linear infinite;
+    width: max-content;
+  }
+
+  .marquee-text-track > * {
+    white-space: nowrap;
+  }
+
+  @keyframes marquee-move-text {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  a {
+    transition: opacity var(--duration-300) var(--ease-in-out-quint);
+    width: fit-content;
+  }
+
+  a:hover {
+    opacity: var(--opacity-50);
+    transition: opacity var(--duration-300) var(--ease-in-out-quint);
+  }
+
+  .contact-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  .social-media-group {
+    display: flex;
+    gap: var(--spacing-20);
+
+    a {
+      font-size: var(--text-lg);
+      display: inline-flex;
+    }
+  }
+
+  .address-cvr-group {
+    display: grid;
+    gap: var(--spacing-12);
+  }
+
+  .cvr-group {
+    span {
+      font-size: var(--text-xs);
+    }
+  }
+
+  hr {
+    max-width: var(--spacing-28);
+  }
+
+  .fadeout-horizontal {
+    mask-image: linear-gradient(to right, transparent, var(--base-dark) 5rem, var(--base-dark) calc(100% - 5rem), transparent);
+  }
+</style>
