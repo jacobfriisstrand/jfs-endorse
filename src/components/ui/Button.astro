@@ -18,7 +18,7 @@ interface ButtonProps extends HTMLAttributes<"button"> {
   variant?: keyof typeof btnVariants;
   size: keyof typeof btnSizes;
   class?: string;
-  rounded: boolean;
+  rounded?: boolean;
 }
 
 interface LinkProps extends HTMLAttributes<"a"> {
@@ -26,7 +26,7 @@ interface LinkProps extends HTMLAttributes<"a"> {
   size: keyof typeof btnSizes;
   href: string;
   class?: string;
-  rounded: boolean;
+  rounded?: boolean;
 }
 
 type Props = (ButtonProps & { asLink?: false }) | (LinkProps & { asLink: true });

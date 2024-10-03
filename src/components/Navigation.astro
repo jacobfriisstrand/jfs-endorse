@@ -1,0 +1,315 @@
+---
+import { fetchData } from "@/lib/fetchData";
+import { Icon } from "astro-icon/components";
+import Button from "./ui/Button.astro";
+import type { Endorser } from "@/lib/types";
+import Image from "astro/components/Image.astro";
+
+interface NavigationProps {
+  generalInfo: {
+    primaryLogo: {
+      url: string;
+      alt: string;
+    };
+    contactButtonText: string;
+  };
+  allPages: {
+    pageHeadline: string;
+    pageSlug: string;
+  }[];
+  allEndorsers: {
+    id: string;
+    position: number;
+    endorserName: string;
+    endorserTitle: string;
+    endorserSlug: string;
+    endorserImage: {
+      responsiveImage: {
+        src: string;
+        width: number;
+        height: number;
+        alt: string;
+      };
+    };
+  }[];
+}
+
+const data = await fetchData<NavigationProps>(`{
+  generalInfo {
+    primaryLogo {
+      url
+      alt
+    }
+    contactButtonText
+  }
+  allPages {
+    pageHeadline
+    pageSlug
+  }
+  allEndorsers {
+    id
+    position
+    endorserName
+    endorserTitle
+    endorserSlug
+    endorserImage {
+      responsiveImage(imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "16:9"}) {
+        src
+        width
+        height
+        alt
+      }
+    }
+  }
+}`);
+---
+
+<nav class="full-bleed">
+  <a class="logo" href="/">
+    <img class="logo" src={data.generalInfo.primaryLogo.url} alt={data.generalInfo.primaryLogo.alt} />
+  </a>
+  <div class="desktop-nav-wrapper">
+    <div class="button-group">
+      <Button class="contact-button" asLink href="#contact" variant="default" rounded size="base"><Icon name="MailSymbol" />{data.generalInfo.contactButtonText}</Button>
+      <button id="menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+    <ul class="nav-menu">
+      {
+        data.allPages.map((page) => (
+          <li>
+            <a href={`${page.pageSlug}`}>{page.pageHeadline}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <style>
+    .logo img {
+      height: 100%;
+    }
+
+    .desktop-nav-wrapper {
+      display: contents;
+
+      @media (min-width: 1024px) {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    #menu-toggle {
+      display: grid;
+      padding-block: var(--spacing-8);
+      gap: var(--spacing-4);
+      width: var(--spacing-24);
+      .bar {
+        height: 2px;
+        background-color: var(--base-dark);
+        transition: transform var(--duration-700) var(--ease-in-out-quint);
+      }
+
+      @media (min-width: 1024px) {
+        display: none;
+      }
+    }
+
+    nav {
+      --menu-item-gap: var(--spacing-44);
+
+      padding: var(--spacing-20);
+      display: flex;
+      justify-content: space-between;
+      position: fixed;
+      width: 100%;
+      z-index: 100;
+    }
+
+    .nav-menu::before {
+      content: "";
+      z-index: -1;
+      position: fixed;
+      bottom: 0;
+      background-color: var(--base-light);
+      right: -100%;
+      width: 100%;
+      height: 100%;
+      transition: right var(--duration-700) var(--ease-in-out-quint);
+    }
+
+    .nav-menu.slide-menu::before {
+      right: 0;
+    }
+
+    @media (min-width: 1024px) {
+      .nav-menu::before {
+        display: none;
+      }
+    }
+
+    .nav-menu {
+      font-size: var(--text-2xl);
+      color: var(--base-dark);
+      position: fixed;
+      right: -100%;
+      bottom: var(--spacing-24);
+      text-align: right;
+      transition: right var(--duration-700) var(--ease-in-out-quint);
+
+      @media (min-width: 1024px) {
+        font-size: var(--text-base);
+        position: static;
+        display: flex;
+        gap: var(--menu-item-gap);
+        align-items: center;
+      }
+    }
+
+    .nav-menu li {
+      margin-top: var(--spacing-20);
+      transform: translateX(10%);
+      opacity: 0;
+      transition:
+        filter var(--duration-700) var(--ease-in-out-quint),
+        opacity var(--duration-700) var(--ease-in-out-quint),
+        transform var(--duration-700) var(--ease-in-out-quint);
+      transition-delay: var(--duration-700);
+
+      @media (min-width: 1024px) {
+        transform: translateX(0);
+        opacity: 1;
+        margin-top: 0;
+        transition: none;
+      }
+
+      > a::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 1px;
+
+        background-color: var(--base-dark);
+        transition: width var(--duration-300) var(--ease-in-out-quint);
+      }
+
+      > a:hover::before {
+        width: 100%;
+      }
+    }
+
+    .nav-menu li.slide-in {
+      transform: translateX(0);
+      filter: blur(0px);
+      opacity: 1;
+      transition:
+        filter var(--duration-700) var(--ease-in-out-quint),
+        opacity var(--duration-700) var(--ease-in-out-quint),
+        transform var(--duration-700) var(--ease-in-out-quint);
+    }
+
+    .nav-menu.slide-menu {
+      right: var(--spacing-24);
+      transition: right var(--duration-700) var(--ease-in-out-quint);
+    }
+
+    .button-group {
+      display: flex;
+      gap: var(--spacing-24);
+      align-items: center;
+    }
+
+    .button-group {
+      @media (min-width: 1024px) {
+        margin-left: var(--menu-item-gap);
+        order: 2;
+      }
+    }
+
+    .logo,
+    .button-group {
+      z-index: 1;
+    }
+
+    .scrolled {
+      background-color: var(--base-light);
+    }
+
+    #menu-toggle.open .bar:first-child {
+      transform: translateY(3px) rotate(45deg);
+      transition: transform var(--duration-700) var(--ease-in-out-quint);
+    }
+
+    #menu-toggle.open .bar:last-child {
+      transform: translateY(-3px) rotate(-45deg);
+      transition: transform var(--duration-700) var(--ease-in-out-quint);
+    }
+  </style>
+
+  <script>
+    const menuToggle = document.getElementById("menu-toggle");
+    const navMenu = document.querySelector(".nav-menu");
+    const navItems = navMenu?.querySelectorAll("li");
+    const navUtilities = document.querySelector("nav");
+    const contactButton = document.querySelector(".contact-button");
+
+    // Replace '#your-reference-element' with the actual ID of your reference element
+    const referenceElement = document.querySelector("#about-us-teaser");
+
+    function checkScrollPosition() {
+      if (referenceElement && !menuToggle?.classList.contains("open")) {
+        // Only apply background if menu is closed
+        const referenceElementTop = referenceElement.getBoundingClientRect().top;
+        if (referenceElementTop < 0) {
+          navUtilities?.classList.add("scrolled");
+        } else {
+          navUtilities?.classList.remove("scrolled");
+        }
+      }
+    }
+
+    menuToggle?.addEventListener("click", () => {
+      navMenu?.classList.toggle("slide-menu");
+      menuToggle.classList.toggle("open");
+
+      if (menuToggle.classList.contains("open")) {
+        document.body.style.overflow = "hidden";
+        // Add staggered animation for list items
+        navItems?.forEach((item, index) => {
+          setTimeout(
+            () => {
+              item.classList.add("slide-in");
+            },
+            200 * (index + 1)
+          );
+        });
+      } else {
+        document.body.style.overflow = "auto";
+        checkScrollPosition();
+        // Remove animation classes
+        navItems?.forEach((item) => {
+          item.classList.remove("slide-in");
+        });
+      }
+    });
+
+    function closeMenu() {
+      navMenu?.classList.remove("slide-menu");
+      menuToggle?.classList.remove("open");
+      document.body.style.overflow = "auto";
+      checkScrollPosition();
+      // Remove animation classes
+      navItems?.forEach((item) => {
+        item.classList.remove("slide-in");
+      });
+    }
+
+    contactButton?.addEventListener("click", closeMenu);
+
+    window.addEventListener("scroll", checkScrollPosition);
+  </script>
+</nav>

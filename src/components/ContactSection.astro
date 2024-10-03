@@ -33,7 +33,7 @@ const data = await fetchData<ContactSectionProps>(`{
 }`);
 ---
 
-<section class="full-bleed">
+<section class="full-bleed" id="contact">
   <div class="contact-content">
     <Heading tag="h3" size="2xl" font="serif">{data.homepage.contactHeader}</Heading>
     <div>
@@ -58,6 +58,7 @@ const data = await fetchData<ContactSectionProps>(`{
     }
 
     section {
+      scroll-margin-top: 4.625rem;
       margin-bottom: var(--spacing-52);
 
       @media (min-width: 1024px) {

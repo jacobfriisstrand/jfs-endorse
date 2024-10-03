@@ -72,6 +72,8 @@ h6 {
 }
 
 :root {
+  --nav-height: 4.8125rem;
+
   /* Universal Padding */
   --universal-inline-padding: var(--spacing-20);
 
@@ -157,7 +159,6 @@ h6 {
 /* Animations */
 
 /* Global styles */
-
 html {
   background-color: var(--base-light);
   scroll-behavior: smooth;
