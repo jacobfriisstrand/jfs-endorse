@@ -1,0 +1,55 @@
+---
+export const prerender = true;
+import PageHeading from "@/components/PageHeading.astro";
+import Heading from "@/components/ui/Heading.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { fetchData } from "@/lib/fetchData";
+import { Seo } from "@datocms/astro/Seo";
+
+interface MetadataProps {
+  allPages: {
+    slug: string;
+  }[];
+}
+
+interface PageProps {
+  page: {
+    headline: string;
+    seo: {
+      attributes: Record<string, string>;
+      content: string;
+      tag: string;
+    }[];
+  };
+}
+
+export async function getStaticPaths() {
+  const data = await fetchData<MetadataProps>(`{
+    allPages {
+      slug: pageSlug
+    }
+  }`);
+  return data.allPages.map(({ slug }) => {
+    return {
+      params: { slug },
+    };
+  });
+}
+
+const pageData = await fetchData<PageProps>(`{
+  page(filter: {pageSlug: {eq: "vores-profiler"}}) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
+    headline: pageHeadline
+  }
+}`);
+---
+
+<Seo data={[...pageData.page.seo]} />
+
+<BaseLayout>
+  <PageHeading>{pageData.page.headline}</PageHeading>
+</BaseLayout>

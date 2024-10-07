@@ -1,0 +1,14 @@
+---
+import Heading from "./ui/Heading.astro";
+---
+
+<header>
+  <Heading class="page-heading" tag="h1" size="2xl" font="serif"><slot /></Heading>
+</header>
+
+<style>
+  header {
+    margin-top: calc(var(--spacing-40) + var(--nav-height));
+    margin-bottom: var(--spacing-60);
+  }
+</style>
