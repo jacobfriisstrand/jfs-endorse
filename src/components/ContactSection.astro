@@ -53,14 +53,13 @@ const data = await fetchData<ContactSectionProps>(`{
       gap: var(--spacing-20);
 
       @media (min-width: 1024px) {
-        grid-column: col-1 / col-3;
+        grid-column: col-1 / col-3 !important;
       }
     }
 
     section {
       scroll-margin-top: 4.625rem;
       margin-bottom: var(--spacing-52);
-
       @media (min-width: 1024px) {
         margin-bottom: var(--spacing-152);
       }
