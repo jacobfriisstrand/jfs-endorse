@@ -62,7 +62,7 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
       height: fit-content;
       top: calc(var(--spacing-16) + var(--nav-height));
       font-family: var(--sans);
-      grid-column: full-start / col-3;
+      grid-column: full-start / col-3 !important;
 
       @media (min-width: 1024px) {
         font-family: var(--font-serif);
@@ -71,17 +71,17 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
     }
 
     .gallery {
-      @media (min-width: 1024px) {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--spacing-20);
-      }
-
       display: grid;
       row-gap: var(--spacing-20);
       grid-template-columns: 1fr;
       grid-template-rows: repeat(5, 1fr);
       grid-auto-flow: row dense;
-      grid-column: col-3 / full-end;
+      grid-column: col-3 / full-end !important;
+
+      @media (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-20);
+      }
 
       img {
         width: 100%;
