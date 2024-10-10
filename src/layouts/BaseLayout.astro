@@ -1,33 +1,8 @@
 ---
+// TODO: Add favicon
+
 import Footer from "@/components/Footer.astro";
 import Navigation from "@/components/Navigation.astro";
-import { fetchData } from "@/lib/fetchData";
-
-interface MetadataProps {
-  homepage: {
-    seo: {
-      attributes: string;
-      content: string;
-      tag: string;
-    }[];
-  };
-  allPages: {
-    slug: string;
-  }[];
-}
-
-const data = await fetchData<MetadataProps>(`{
-    homepage {
-      seo: _seoMetaTags {
-        attributes
-        content
-        tag
-      }
-    }
-    allPages {
-      slug: pageSlug
-    }
-  }`);
 ---
 
 <!doctype html>
