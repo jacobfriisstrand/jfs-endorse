@@ -62,7 +62,7 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
       height: fit-content;
       top: calc(var(--spacing-16) + var(--nav-height));
       font-family: var(--sans);
-      grid-column: full-start / col-3 !important;
+      grid-column: full-start / col-3;
 
       @media (min-width: 1024px) {
         font-family: var(--font-serif);
@@ -76,7 +76,7 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
       grid-template-columns: 1fr;
       grid-template-rows: repeat(5, 1fr);
       grid-auto-flow: row dense;
-      grid-column: col-3 / full-end !important;
+      grid-column: col-3 / full-end;
 
       @media (min-width: 1024px) {
         grid-template-columns: repeat(3, 1fr);
