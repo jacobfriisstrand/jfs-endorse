@@ -70,6 +70,7 @@ const data = await fetchData<NavigationProps>(`{
   </a>
   <div class="desktop-nav-wrapper">
     <div class="button-group">
+      <!-- TODO: Handle link to contact section if on another page -->
       <Button class="contact-button" asLink href="#contact" variant="default" rounded size="base"><Icon name="MailSymbol" />{data.generalInfo.contactButtonText}</Button>
       <button id="menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
         <span class="bar"></span>
@@ -259,12 +260,11 @@ const data = await fetchData<NavigationProps>(`{
     const navUtilities = document.querySelector("nav");
     const contactButton = document.querySelector(".contact-button");
 
-    // Replace '#your-reference-element' with the actual ID of your reference element
+    // TODO: Change element to be the first element on all pages
     const referenceElement = document.querySelector("#about-us-teaser");
 
     function checkScrollPosition() {
       if (referenceElement && !menuToggle?.classList.contains("open")) {
-        // Only apply background if menu is closed
         const referenceElementTop = referenceElement.getBoundingClientRect().top;
         if (referenceElementTop < 0) {
           navUtilities?.classList.add("scrolled");
@@ -277,10 +277,8 @@ const data = await fetchData<NavigationProps>(`{
     menuToggle?.addEventListener("click", () => {
       navMenu?.classList.toggle("slide-menu");
       menuToggle.classList.toggle("open");
-
       if (menuToggle.classList.contains("open")) {
         document.body.style.overflow = "hidden";
-        // Add staggered animation for list items
         navItems?.forEach((item, index) => {
           setTimeout(
             () => {
@@ -292,7 +290,6 @@ const data = await fetchData<NavigationProps>(`{
       } else {
         document.body.style.overflow = "auto";
         checkScrollPosition();
-        // Remove animation classes
         navItems?.forEach((item) => {
           item.classList.remove("slide-in");
         });
@@ -304,7 +301,6 @@ const data = await fetchData<NavigationProps>(`{
       menuToggle?.classList.remove("open");
       document.body.style.overflow = "auto";
       checkScrollPosition();
-      // Remove animation classes
       navItems?.forEach((item) => {
         item.classList.remove("slide-in");
       });
