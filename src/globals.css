@@ -145,11 +145,13 @@ h6 {
 
   /* Opacity */
   --opacity-50: 0.5;
+  --opacity-75: 0.75;
   --opacity-100: 1;
 
   /* Transition Durations */
   --duration-150: 150ms;
   --duration-300: 300ms;
+  --duration-500: 500ms;
   --duration-700: 700ms;
   --duration-1500: 1500ms;
 
