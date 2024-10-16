@@ -84,7 +84,7 @@ const data = await fetchData<FooterProps>(`{
         <div class="social-media-group">
           {
             data.generalInfo.socialMedia.map((socialMedia: { socialMediaLink: string; platformName: string }) => (
-              <a target="_blank" href={socialMedia.socialMediaLink}>
+              <a title="{socialMedia.platformName}" target="_blank" href={socialMedia.socialMediaLink}>
                 <Icon name={socialMedia.platformName} />
               </a>
             ))
