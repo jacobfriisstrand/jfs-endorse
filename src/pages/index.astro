@@ -44,6 +44,8 @@ export interface HeroCarouselProps {
   }[];
 }
 
+// TODO: Add Lenis smooth scroll
+
 const data = await fetchData<HomepageProps & HeroCarouselProps>(`{
   homepage {
     seo: _seoMetaTags {

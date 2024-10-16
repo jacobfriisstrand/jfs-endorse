@@ -1,10 +1,11 @@
 ---
 export const prerender = true;
+import CaseListItem from "@/components/CaseListItem.astro";
 import PageHeading from "@/components/PageHeading.astro";
-import Heading from "@/components/ui/Heading.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { fetchData } from "@/lib/fetchData";
 import { Seo } from "@datocms/astro/Seo";
+import type { CaseItem } from "@/components/CaseListItem.astro";
 
 interface MetadataProps {
   allPages: {
@@ -21,6 +22,7 @@ interface PageProps {
       tag: string;
     }[];
   };
+  allCases: CaseItem[];
 }
 
 export async function getStaticPaths() {
@@ -45,6 +47,33 @@ const pageData = await fetchData<PageProps>(`{
     }
     headline: pageHeadline
   }
+    allCases {
+    logo: caseClientLogo {
+      attributes: responsiveImage(
+        imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "16:9"}
+      ) {
+        src
+        width
+        height
+        alt
+      }
+    }
+    image: caseMedia {
+      attributes: responsiveImage(
+        imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "3:4"}
+      ) {
+        src
+        width
+        height
+        alt
+      }
+    }
+    caseEyebrow
+    caseClientName
+    caseShortDescription
+    caseLinkText
+    slug
+  }
 }`);
 ---
 
@@ -52,4 +81,25 @@ const pageData = await fetchData<PageProps>(`{
 
 <BaseLayout>
   <PageHeading>{pageData.page.headline}</PageHeading>
+
+  <ul class="case-list">
+    {pageData.allCases.map((item) => <CaseListItem item={item} />)}
+  </ul>
 </BaseLayout>
+
+<style>
+  .case-list {
+    display: grid;
+    gap: var(--spacing-64);
+    grid-template-columns: 1fr;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1400px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-20);
+    }
+  }
+</style>
