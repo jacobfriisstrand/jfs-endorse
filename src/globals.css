@@ -18,7 +18,7 @@ button {
 
 a:focus-visible,
 button:focus-visible {
-  outline: 1px solid var(--base-dark);
+  outline: 1px solid currentColor;
   outline-offset: 2px;
 }
 

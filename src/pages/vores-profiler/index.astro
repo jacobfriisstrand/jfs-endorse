@@ -138,13 +138,13 @@ const pageData = await fetchData<PageProps>(`{
 
       &.initial-active:not(.interacted),
       &:hover,
-      &:focus {
+      &:focus-visible {
         color: var(--base-dark);
       }
 
       &.initial-active:not(.interacted) + img,
       &:hover + img,
-      &:focus + img {
+      &:focus-visible + img {
         opacity: 1;
         transition: opacity var(--duration-500) var(--ease-in-out-quint);
       }

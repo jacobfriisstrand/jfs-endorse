@@ -130,6 +130,10 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
         opacity: 0.5;
       }
 
+      .gallery__item a :focus-visible img {
+        border: 2px solid red;
+      }
+
       .gallery__item:nth-child(3n + 1),
       .gallery__item:nth-child(5n + 1) {
         grid-column: span 2;
