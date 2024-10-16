@@ -109,16 +109,9 @@ export default function HeroCarousel({ children, allEndorsers }: Readonly<{ chil
     <section aria-labelledby="carouselheading" className={styles.hero} role="region" aria-roledescription="carousel">
       <header className={styles.hero__header}>{children}</header>
       <div className={styles.visually__hidden} aria-live="polite" ref={liveRegionRef} />
-      <ul role="list" id="carousel-content">
+      <ul id="carousel-content">
         {shuffledEndorsers.map((endorser: Endorser, index) => (
-          <li
-            ref={(el) => (slideRefs.current[index] = el)}
-            className={`${styles.slide__container} ${currentIndex === index ? styles.show : styles.hide}`}
-            key={endorser.endorserName}
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`${index + 1} of ${shuffledEndorsers.length}`}
-          >
+          <li ref={(el) => (slideRefs.current[index] = el)} className={`${styles.slide__container} ${currentIndex === index ? styles.show : styles.hide}`} key={endorser.endorserName} aria-roledescription="slide" aria-label={`${index + 1} of ${shuffledEndorsers.length}`}>
             <article className={styles.slide}>
               <img loading={index === 0 ? "eager" : "lazy"} width={endorser.endorserImage.responsiveImage.width} height={endorser.endorserImage.responsiveImage.height} src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
               <a href={`/${endorser.endorserSlug}`} tabIndex={currentIndex === index ? 0 : -1}>
