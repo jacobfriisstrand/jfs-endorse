@@ -1,0 +1,209 @@
+---
+import Breadcrumb from "@/components/ui/Breadcrumb.astro";
+import Heading from "@/components/ui/Heading.astro";
+import MaterialSymbolsArrowForward from "@/icons/MaterialSymbolsArrowForward";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { fetchData } from "@/lib/fetchData";
+import { StructuredText } from "@datocms/astro";
+import { Seo } from "@datocms/astro/Seo";
+import { Image } from "astro:assets";
+
+const { slug } = Astro.params;
+
+export async function getStaticPaths() {
+  const data = await fetchData<MetadataProps>(`{
+    allCases {
+      slug
+    }
+  }`);
+  return data.allCases.map(({ slug }) => {
+    return {
+      params: { slug },
+    };
+  });
+}
+
+interface MetadataProps {
+  allCases: {
+    slug: string;
+  }[];
+}
+
+interface PageProps {
+  case: {
+    seo: {
+      attributes: Record<string, string>;
+      content: string;
+      tag: string;
+    }[];
+    caseClientName: string;
+    image: {
+      attributes: {
+        src: string;
+        width: number;
+        height: number;
+        alt: string;
+      };
+    };
+    caseText: {
+      value: string;
+    };
+
+    caseEndorser: {
+      endorserImage: {
+        attributes: {
+          src: string;
+          width: number;
+          height: number;
+          alt: string;
+        };
+      };
+      endorserName: string;
+      endorserSlug: string;
+    };
+    endorserLinkText: string;
+  };
+}
+
+const caseData = await fetchData<PageProps>(`{
+  case(filter: {slug: {eq: "${slug}"}}) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
+    caseClientName
+    image: caseMedia {
+      attributes: responsiveImage(
+        imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "3:4"}
+      ) {
+        src
+        width
+        height
+        alt
+      }
+    }
+    caseText {
+      value
+    }
+    caseEndorser {
+      endorserImage {
+        attributes: responsiveImage(
+          imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "4:2"}
+        ) {
+          src
+          width
+          height
+          alt
+        }
+      }
+      endorserName
+      endorserSlug
+    }
+    endorserLinkText
+  }
+}`);
+
+if (!caseData.case) return Astro.redirect("/404");
+
+const { caseClientName, image, caseText, seo, caseEndorser, endorserLinkText } = caseData.case;
+---
+
+<Seo data={[...seo]} />
+
+<BaseLayout>
+  <div class="case-container">
+    <Breadcrumb class="case-breadcrumb" slug={slug}>
+      <Fragment slot="previous-page">Cases</Fragment>
+      <Fragment slot="current-page">{caseClientName}</Fragment>
+    </Breadcrumb>
+    <article>
+      <Image src={image.attributes.src} alt={image.attributes.alt} width={image.attributes.width} height={image.attributes.height} />
+      <div>
+        <Heading tag="h1" size="lg" font="serif">{caseClientName}</Heading>
+        <StructuredText data={caseText} />
+      </div>
+    </article>
+    <a href=`vores-profiler/${caseEndorser.endorserSlug}` class="case-endorser">
+      <Image src={caseEndorser.endorserImage.attributes.src} alt={caseEndorser.endorserImage.attributes.alt} width={caseEndorser.endorserImage.attributes.width} height={caseEndorser.endorserImage.attributes.height} />
+      <p>{endorserLinkText} {caseEndorser.endorserName} <MaterialSymbolsArrowForward client:load /></p>
+    </a>
+  </div>
+
+  <style>
+    .case-container {
+      margin-top: var(--spacing-84);
+      display: grid;
+
+      @media (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-20);
+      }
+
+      img {
+        order: -1;
+
+        @media (min-width: 1024px) {
+          order: inherit;
+        }
+      }
+
+      article {
+        display: contents;
+
+        @media (min-width: 1024px) {
+        }
+      }
+
+      .case-breadcrumb {
+        margin-top: var(--spacing-16);
+
+        @media (min-width: 1024px) {
+          order: 1;
+        }
+      }
+
+      h1 {
+        margin-top: var(--spacing-20);
+        margin-bottom: var(--spacing-16);
+      }
+
+      .case-endorser {
+        margin-top: var(--spacing-40);
+        width: fit-content;
+
+        svg {
+          transition: transform var(--duration-300) var(--ease-in-out-quint);
+        }
+
+        &:hover {
+          svg {
+            transform: translateX(var(--spacing-4));
+            transition: transform var(--duration-300) var(--ease-in-out-quint);
+          }
+        }
+
+        p {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-8);
+
+          @media (min-width: 1024px) {
+            align-items: last baseline;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          margin-top: 0;
+          width: 50%;
+          margin-left: auto;
+
+          img {
+            min-height: 100%;
+            object-fit: cover;
+          }
+        }
+      }
+    }
+  </style>
+</BaseLayout>

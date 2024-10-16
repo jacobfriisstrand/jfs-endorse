@@ -1,0 +1,37 @@
+---
+const { slug, ...props } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" {...props}>
+  <ul>
+    <li><a href="/cases"><slot name="previous-page" /></a></li>
+    <li><a href=`/cases/${slug}` aria-current="page"><slot name="current-page" /></a></li>
+  </ul>
+</nav>
+
+<style>
+  ul {
+    display: flex;
+    gap: var(--spacing-8);
+    align-items: center;
+  }
+
+  li {
+    transition: opacity var(--duration-300) var(--ease-in-out-quint);
+  }
+
+  li:hover {
+    opacity: var(--opacity-50);
+    transition: opacity var(--duration-300) var(--ease-in-out-quint);
+  }
+
+  ul li:first-child {
+    color: var(--base-lightGray);
+  }
+
+  ul li:not(:last-child):after {
+    content: "⎯";
+    margin-left: var(--spacing-8);
+    color: var(--base-dark);
+  }
+</style>

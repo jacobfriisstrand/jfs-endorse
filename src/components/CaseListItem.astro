@@ -45,7 +45,7 @@ export interface CaseItem {
       </div>
     </div>
     <p>{item.caseShortDescription}</p>
-    <a href={item.slug}>{item.caseLinkText} <MaterialSymbolsArrowRight client:load /></a>
+    <a href=`/cases/${item.slug}`>{item.caseLinkText} <MaterialSymbolsArrowRight client:load /></a>
     <hr />
   </div>
 </li>
