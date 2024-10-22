@@ -85,7 +85,7 @@ const pageData = await fetchData<PageProps>(`{
     {
       pageData.allEndorsers.map((endorser, index) => (
         <li>
-          <a class={`endorser-name ${index === 0 ? "initial-active" : ""}`} href={endorser.endorserSlug}>
+          <a class={`endorser-name ${index === 0 ? "initial-active" : ""}`} href={`/vores-profiler/${endorser.endorserSlug}`}>
             {endorser.endorserName} <span>{endorser.endorserTitle}</span>
           </a>
           <Image src={endorser.img.attributes.src} width={endorser.img.attributes.width} height={endorser.img.attributes.height} alt={endorser.img.attributes.alt} />
@@ -161,7 +161,7 @@ const pageData = await fetchData<PageProps>(`{
       object-fit: cover;
       filter: grayscale(100%);
       opacity: 0;
-      transition: opacity var(--duration-500) var(--linear);
+      transition: opacity var(--duration-150) var(--linear);
       overflow: hidden;
     }
 

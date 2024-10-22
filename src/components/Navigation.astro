@@ -83,7 +83,7 @@ const data = await fetchData<NavigationProps>(`{
       {
         data.allPages.map((page) => (
           <li>
-            <a href={`${page.pageSlug}`}>{page.pageHeadline}</a>
+            <a href={`/${page.pageSlug}`}>{page.pageHeadline}</a>
           </li>
         ))
       }

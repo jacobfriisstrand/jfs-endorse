@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import Breadcrumb from "@/components/ui/Breadcrumb.astro";
 import Heading from "@/components/ui/Heading.astro";
 import MaterialSymbolsArrowForward from "@/icons/MaterialSymbolsArrowForward";
@@ -107,6 +108,7 @@ const caseData = await fetchData<PageProps>(`{
 if (!caseData.case) return Astro.redirect("/404");
 
 const { caseClientName, image, caseText, seo, caseEndorser, endorserLinkText } = caseData.case;
+console.log("caseEndorser.endorserSlug", caseEndorser.endorserSlug);
 ---
 
 <Seo data={[...seo]} />
@@ -124,7 +126,7 @@ const { caseClientName, image, caseText, seo, caseEndorser, endorserLinkText } =
         <StructuredText data={caseText} />
       </div>
     </article>
-    <a href=`vores-profiler/${caseEndorser.endorserSlug}` class="case-endorser">
+    <a href=`/vores-profiler/${caseEndorser.endorserSlug}` class="case-endorser">
       <Image src={caseEndorser.endorserImage.attributes.src} alt={caseEndorser.endorserImage.attributes.alt} width={caseEndorser.endorserImage.attributes.width} height={caseEndorser.endorserImage.attributes.height} />
       <p>{endorserLinkText} {caseEndorser.endorserName} <MaterialSymbolsArrowForward client:load /></p>
     </a>
@@ -195,7 +197,7 @@ const { caseClientName, image, caseText, seo, caseEndorser, endorserLinkText } =
 
         @media (min-width: 1024px) {
           margin-top: 0;
-          width: 50%;
+          width: 60%;
           margin-left: auto;
 
           img {
