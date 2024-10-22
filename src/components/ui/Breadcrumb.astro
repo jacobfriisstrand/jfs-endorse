@@ -1,11 +1,11 @@
 ---
-const { slug, ...props } = Astro.props;
+const { slug, href, ...props } = Astro.props;
 ---
 
 <nav aria-label="Breadcrumb" {...props}>
   <ul>
-    <li><a href="/cases"><slot name="previous-page" /></a></li>
-    <li><a href=`/cases/${slug}` aria-current="page"><slot name="current-page" /></a></li>
+    <li><a href={href}><slot name="previous-page" /></a></li>
+    <li><a href=`${href}/${slug}` aria-current="page"><slot name="current-page" /></a></li>
   </ul>
 </nav>
 

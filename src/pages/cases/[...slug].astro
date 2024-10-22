@@ -108,14 +108,13 @@ const caseData = await fetchData<PageProps>(`{
 if (!caseData.case) return Astro.redirect("/404");
 
 const { caseClientName, image, caseText, seo, caseEndorser, endorserLinkText } = caseData.case;
-console.log("caseEndorser.endorserSlug", caseEndorser.endorserSlug);
 ---
 
 <Seo data={[...seo]} />
 
 <BaseLayout>
   <div class="case-container">
-    <Breadcrumb class="case-breadcrumb" slug={slug}>
+    <Breadcrumb class="case-breadcrumb" slug={slug} href="/cases">
       <Fragment slot="previous-page">Cases</Fragment>
       <Fragment slot="current-page">{caseClientName}</Fragment>
     </Breadcrumb>

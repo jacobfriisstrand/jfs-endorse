@@ -79,6 +79,7 @@ h6 {
 
   /* Colors */
   --base-dark: #131313;
+  --base-darkGray: #3f3f40;
   --base-light: #ffffff;
   --base-lightGray: #565856;
   --base-lighterGray: #efefef;
