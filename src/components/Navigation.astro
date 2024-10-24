@@ -2,8 +2,6 @@
 import { fetchData } from "@/lib/fetchData";
 import { Icon } from "astro-icon/components";
 import Button from "./ui/Button.astro";
-import type { Endorser } from "@/lib/types";
-import Image from "astro/components/Image.astro";
 
 interface NavigationProps {
   generalInfo: {
@@ -46,24 +44,7 @@ const data = await fetchData<NavigationProps>(`{
     pageHeadline
     pageSlug
   }
-  allEndorsers {
-    id
-    position
-    endorserName
-    endorserTitle
-    endorserSlug
-    endorserImage {
-      responsiveImage(imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "16:9"}) {
-        src
-        width
-        height
-        alt
-      }
-    }
-  }
 }`);
-
-// TODO: Add underline to current page
 ---
 
 <nav class="full-bleed">
@@ -72,7 +53,6 @@ const data = await fetchData<NavigationProps>(`{
   </a>
   <div class="desktop-nav-wrapper">
     <div class="button-group">
-      <!-- TODO: Handle link to contact section if on another page -->
       <Button class="contact-button" asLink href="#contact" variant="default" rounded size="base"><Icon name="MailSymbol" />{data.generalInfo.contactButtonText}</Button>
       <button id="menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
         <span class="bar"></span>
@@ -92,7 +72,7 @@ const data = await fetchData<NavigationProps>(`{
 
   <style>
     .logo img {
-      height: 100%;
+      min-height: 100%;
     }
 
     .desktop-nav-wrapper {
@@ -122,7 +102,7 @@ const data = await fetchData<NavigationProps>(`{
 
     nav {
       --menu-item-gap: var(--spacing-44);
-
+      transition: background-color var(--duration-300) var(--ease-in-out-quint);
       padding: var(--spacing-20);
       display: flex;
       justify-content: space-between;
@@ -161,13 +141,13 @@ const data = await fetchData<NavigationProps>(`{
       bottom: var(--spacing-24);
       text-align: right;
       transition: right var(--duration-700) var(--ease-in-out-quint);
-
       @media (min-width: 1024px) {
         font-size: var(--text-base);
         position: static;
         display: flex;
         gap: var(--menu-item-gap);
         align-items: center;
+        height: 100%;
       }
     }
 
@@ -175,6 +155,7 @@ const data = await fetchData<NavigationProps>(`{
       margin-top: var(--spacing-20);
       transform: translateX(10%);
       width: fit-content;
+      position: relative;
       margin-left: auto;
       opacity: 0;
       transition:
@@ -242,6 +223,7 @@ const data = await fetchData<NavigationProps>(`{
 
     .scrolled {
       background-color: var(--base-light);
+      transition: background-color var(--duration-300) var(--ease-in-out-quint);
     }
 
     #menu-toggle.open .bar:first-child {
@@ -253,22 +235,41 @@ const data = await fetchData<NavigationProps>(`{
       transform: translateY(-3px) rotate(-45deg);
       transition: transform var(--duration-700) var(--ease-in-out-quint);
     }
+
+    .active:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: var(--base-dark);
+    }
   </style>
 
   <script>
+    const isHomePage = window.location.pathname === "/";
     const menuToggle = document.getElementById("menu-toggle");
     const navMenu = document.querySelector(".nav-menu");
     const navItems = navMenu?.querySelectorAll("li");
     const navUtilities = document.querySelector("nav");
     const contactButton = document.querySelector(".contact-button");
+    const currentURL = window.location.href;
 
-    // TODO: Change element to be the first element on all pages
-    const referenceElement = document.querySelector("#about-us-teaser");
+    if (contactButton && !isHomePage) {
+      contactButton.setAttribute("href", "/#contact");
+    }
+
+    navItems?.forEach((item) => {
+      if (item.querySelector("a")?.href === currentURL) {
+        item.querySelector("a")?.classList.add("active");
+      }
+    });
 
     function checkScrollPosition() {
-      if (referenceElement && !menuToggle?.classList.contains("open")) {
-        const referenceElementTop = referenceElement.getBoundingClientRect().top;
-        if (referenceElementTop < 0) {
+      if (!menuToggle?.classList.contains("open")) {
+        const scrollPosition = window.scrollY;
+        if (scrollPosition > 50) {
           navUtilities?.classList.add("scrolled");
         } else {
           navUtilities?.classList.remove("scrolled");

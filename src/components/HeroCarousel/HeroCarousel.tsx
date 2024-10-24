@@ -7,6 +7,7 @@ import MaterialSymbolsArrowForward from "@/icons/MaterialSymbolsArrowForward";
 import MaterialSymbolsArrowOutward from "@/icons/MaterialSymbolsArrowOutward";
 import type { Endorser } from "@/lib/types";
 import type { HeroCarouselProps } from "@/pages/index.astro";
+import { Image } from "react-datocms";
 
 export default function HeroCarousel({ children, allEndorsers }: Readonly<{ children: React.ReactNode }> & HeroCarouselProps) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -113,7 +114,7 @@ export default function HeroCarousel({ children, allEndorsers }: Readonly<{ chil
         {shuffledEndorsers.map((endorser: Endorser, index) => (
           <li ref={(el) => (slideRefs.current[index] = el)} className={`${styles.slide__container} ${currentIndex === index ? styles.show : styles.hide}`} key={endorser.endorserName} aria-roledescription="slide" aria-label={`${index + 1} of ${shuffledEndorsers.length}`}>
             <article className={styles.slide}>
-              <img loading={index === 0 ? "eager" : "lazy"} width={endorser.endorserImage.responsiveImage.width} height={endorser.endorserImage.responsiveImage.height} src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
+              <Image data={endorser.endorserImage.responsiveImage} />
               <a href={`/vores-profiler/${endorser.endorserSlug}`} tabIndex={currentIndex === index ? 0 : -1}>
                 <h2>
                   {endorser.endorserName}

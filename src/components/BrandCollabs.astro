@@ -1,6 +1,4 @@
 ---
-// TODO: Make sure the marquee is static when there are less than X items in the array
-
 import { fetchData } from "@/lib/fetchData";
 import Heading from "./ui/Heading.astro";
 import { Image } from "astro:assets";
@@ -46,12 +44,12 @@ const data = await fetchData<BrandCollabProps>(`{
     <header>
       <Heading font="serif" tag="h3" size="xl">{data.query.brandCollabHeadline}</Heading>
     </header>
-    <div class="marquee fadeout-horizontal" style=`--numItems: ${data.allCases.length}`>
-      <ul class="marquee-track">
+    <div class:list={["marquee fadeout-horizontal", { "static-display": data.allCases.length < 8 }]} style=`--numItems: ${data.allCases.length}`>
+      <ul class:list={["marquee-track", { "static-track": data.allCases.length < 8 }]}>
         {
           data.allCases.map((caseItem: CaseItem, index) => (
             <li class="marquee-item" style={`--item-position: ${index + 1}`}>
-              <a href={caseItem.slug}>
+              <a href={`/cases/${caseItem.slug}`}>
                 <Image src={caseItem.caseClientLogo.url} alt={caseItem.caseClientLogo.alt} width={caseItem.caseClientLogo.width} height={caseItem.caseClientLogo.height} />
               </a>
             </li>
@@ -113,6 +111,7 @@ const data = await fetchData<BrandCollabProps>(`{
   .marquee-track {
     display: grid;
     container-type: inline-size;
+    place-items: center;
     grid-template-columns: var(--track-width) [track] 0px [resting];
     width: max-content;
 
@@ -148,5 +147,30 @@ const data = await fetchData<BrandCollabProps>(`{
 
   .fadeout-horizontal {
     mask-image: linear-gradient(to right, transparent, var(--base-dark) 5rem, var(--base-dark) calc(100% - 5rem), transparent);
+  }
+
+  @media (min-width: 400px) {
+    .static-track {
+      grid-template-columns: repeat(auto-fit, var(--item-width));
+      gap: var(--item-gap);
+      width: 100%;
+      justify-content: center;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .static-display {
+      max-width: 100%;
+      overflow: visible;
+      display: flex;
+      justify-content: center;
+    }
+
+    .static-display .marquee-item {
+      animation: none;
+      grid-area: unset;
+    }
   }
 </style>

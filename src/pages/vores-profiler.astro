@@ -2,6 +2,7 @@
 export const prerender = true;
 import PageHeading from "@/components/PageHeading.astro";
 import Heading from "@/components/ui/Heading.astro";
+import MaterialSymbolsArrowForward from "@/icons/MaterialSymbolsArrowForward";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { fetchData } from "@/lib/fetchData";
 import { Seo } from "@datocms/astro/Seo";
@@ -86,7 +87,10 @@ const pageData = await fetchData<PageProps>(`{
       pageData.allEndorsers.map((endorser, index) => (
         <li>
           <a class={`endorser-name ${index === 0 ? "initial-active" : ""}`} href={`/vores-profiler/${endorser.endorserSlug}`}>
-            {endorser.endorserName} <span>{endorser.endorserTitle}</span>
+            {endorser.endorserName}{" "}
+            <span>
+              {endorser.endorserTitle} <MaterialSymbolsArrowForward client:load />
+            </span>
           </a>
           <Image src={endorser.img.attributes.src} width={endorser.img.attributes.width} height={endorser.img.attributes.height} alt={endorser.img.attributes.alt} />
         </li>
@@ -122,6 +126,15 @@ const pageData = await fetchData<PageProps>(`{
 
     span {
       font-size: var(--text-xs);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-4);
+
+      svg {
+        @media (min-width: 1024px) {
+          display: none;
+        }
+      }
     }
 
     @media (min-width: 1024px) {
