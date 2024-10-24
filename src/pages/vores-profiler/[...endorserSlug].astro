@@ -66,7 +66,7 @@ const endorserData = await fetchData<PageProps>(`{
     }
     image: endorserImage {
       attributes: responsiveImage(
-        imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "3:4"}
+        imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "16:9"}
       ) {
         src
         width
@@ -95,7 +95,7 @@ const { seo, image, endorserName, endorserTitle, endorserDescription, endorserSo
 
 <BaseLayout>
   <div class="full-bleed">
-    <Image src={image.attributes.src} alt={image.attributes.alt} width={image.attributes.width} height={image.attributes.height} />
+    <Image class="endorser-image" src={image.attributes.src} alt={image.attributes.alt} width={image.attributes.width} height={image.attributes.height} />
     <div class="endorser-content">
       <Breadcrumb class="endorser-breadcrumb" slug={endorserSlug} href="/vores-profiler">
         <Fragment slot="previous-page">Vores profiler</Fragment>
@@ -107,8 +107,7 @@ const { seo, image, endorserName, endorserTitle, endorserDescription, endorserSo
       </div>
       <hr />
       <p>{endorserDescription}</p>
-      <a href={endorserSheerMediakitLink} class="endorser-sheer-mediakit">
-        <!-- TODO: indsæt sheer logo her -->
+      <a href={endorserSheerMediakitLink} class="endorser-sheer-mediakit" target="_blank">
         <Image src={SheerLogo} alt="Sheer Mediakit logo" />
         <span>Sheer Mediakit</span>
         <MaterialSymbolsArrowForward client:load />
@@ -121,6 +120,7 @@ const { seo, image, endorserName, endorserTitle, endorserDescription, endorserSo
               {endorserSocialMedia.map(({ socialMediaHandle, socialMediaLink, platformName }) => (
                 <li>
                   <span>{platformName}</span>
+                  <span>⎯⎯⎯⎯</span>
                   <a href={socialMediaLink} target="_blank" rel="noopener noreferrer">
                     {socialMediaHandle}
                   </a>
@@ -131,6 +131,7 @@ const { seo, image, endorserName, endorserTitle, endorserDescription, endorserSo
             endorserSocialMedia.map(({ socialMediaHandle, socialMediaLink, platformName }) => (
               <p>
                 <span>{platformName}</span>
+                <span>⎯⎯⎯⎯</span>
                 <a href={socialMediaLink} target="_blank" rel="noopener noreferrer">
                   {socialMediaHandle}
                 </a>
@@ -153,20 +154,64 @@ const { seo, image, endorserName, endorserTitle, endorserDescription, endorserSo
     margin-top: var(--spacing-12);
     display: grid;
     gap: var(--spacing-16);
+
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 0.5fr;
+      column-gap: var(--spacing-64);
+      align-items: start;
+
+      hr {
+        display: none;
+      }
+
+      p {
+        grid-column: 1;
+      }
+
+      .endorser-social-media {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      .endorser-sheer-mediakit {
+        grid-column: 2;
+        margin-bottom: auto;
+      }
+
+      h1 {
+        font-size: var(--text-xl);
+      }
+    }
   }
 
   .endorser-info {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: var(--spacing-4);
+
+    @media (min-width: 1024px) {
+      flex-direction: row;
+      align-items: last baseline;
+      gap: var(--spacing-64);
+      grid-column: 1;
+      max-height: fit-content;
+    }
   }
 
   .endorser-breadcrumb {
     margin-bottom: var(--spacing-20);
   }
 
-  img {
+  .endorser-image {
     aspect-ratio: 3 / 4;
     width: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+    filter: grayscale(100%);
+
+    @media (min-width: 1024px) {
+      aspect-ratio: 16 / 9;
+    }
   }
 
   hr {
@@ -180,8 +225,12 @@ const { seo, image, endorserName, endorserTitle, endorserDescription, endorserSo
     li,
     p {
       display: flex;
-      justify-content: space-between;
+      gap: var(--spacing-16);
       color: var(--base-darkGray);
+    }
+
+    @media (min-width: 1024px) {
+      font-size: var(--text-base);
     }
   }
 
@@ -197,6 +246,10 @@ const { seo, image, endorserName, endorserTitle, endorserDescription, endorserSo
       height: var(--spacing-16);
       width: var(--spacing-16);
       aspect-ratio: 1;
+    }
+
+    @media (min-width: 1024px) {
+      font-size: var(--text-base);
     }
   }
 </style>

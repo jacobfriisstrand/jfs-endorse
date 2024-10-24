@@ -55,6 +55,7 @@ h5,
 h6 {
   overflow-wrap: break-word;
   text-wrap: balance;
+  max-width: 65ch;
 }
 
 body {

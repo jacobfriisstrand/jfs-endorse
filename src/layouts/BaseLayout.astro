@@ -3,14 +3,39 @@
 
 import Footer from "@/components/Footer.astro";
 import Navigation from "@/components/Navigation.astro";
+import { fetchData } from "@/lib/fetchData";
+import { Seo } from "@datocms/astro/Seo";
+
+interface FavIconProps {
+  _site: {
+    faviconMetaTags: SeoOrFaviconTag[];
+  };
+}
+
+interface SeoOrFaviconTag {
+  attributes: Record<string, string>;
+  content: string;
+  tag: string;
+  // Add other properties as needed
+}
+
+const favIcon = await fetchData<FavIconProps>(`{
+  _site {
+    faviconMetaTags {
+      attributes
+      content
+      tag
+    }
+  }
+}`);
 ---
 
-<!doctype html>
 <html lang="da">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="src/globals.css" />
+    <Seo data={[...favIcon._site.faviconMetaTags]} />
   </head>
   <body>
     <Navigation />

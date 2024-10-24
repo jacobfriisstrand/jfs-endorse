@@ -114,7 +114,7 @@ export default function HeroCarousel({ children, allEndorsers }: Readonly<{ chil
           <li ref={(el) => (slideRefs.current[index] = el)} className={`${styles.slide__container} ${currentIndex === index ? styles.show : styles.hide}`} key={endorser.endorserName} aria-roledescription="slide" aria-label={`${index + 1} of ${shuffledEndorsers.length}`}>
             <article className={styles.slide}>
               <img loading={index === 0 ? "eager" : "lazy"} width={endorser.endorserImage.responsiveImage.width} height={endorser.endorserImage.responsiveImage.height} src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
-              <a href={`/${endorser.endorserSlug}`} tabIndex={currentIndex === index ? 0 : -1}>
+              <a href={`/vores-profiler/${endorser.endorserSlug}`} tabIndex={currentIndex === index ? 0 : -1}>
                 <h2>
                   {endorser.endorserName}
                   <span>
