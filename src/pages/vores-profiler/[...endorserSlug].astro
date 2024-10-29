@@ -210,7 +210,7 @@ const { seo, image, endorserName, endorserTitle, endorserDescription, endorserSo
     filter: grayscale(100%);
 
     @media (min-width: 1024px) {
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 16 / 6;
     }
   }
 
@@ -221,6 +221,8 @@ const { seo, image, endorserName, endorserTitle, endorserDescription, endorserSo
   .endorser-social-media {
     font-size: var(--text-sm);
     grid-row: 3;
+    display: grid;
+    gap: var(--spacing-8);
 
     li,
     p {

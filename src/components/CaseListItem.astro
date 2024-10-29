@@ -1,7 +1,7 @@
 ---
 import MaterialSymbolsArrowRight from "@/icons/MaterialSymbolsArrowForward";
 import Heading from "./ui/Heading.astro";
-import Image from "astro/components/Image.astro";
+import { Image } from "@datocms/astro";
 
 const { item } = Astro.props;
 
@@ -35,120 +35,118 @@ export interface CaseItem {
 ---
 
 <li class="case">
-  <Image class="case-image" src={item.image.attributes.src} alt={item.image.attributes.alt} width={item.image.attributes.width} height={item.image.attributes.height} />
+  <Image pictureClass="case-image" data={item.image.attributes} />
   <div class="case-content">
-    <div class="heading-logo">
-      <Image class="case-logo" src={item.logo.attributes.src} alt={item.logo.attributes.alt} width={item.logo.attributes.width} height={item.logo.attributes.height} />
-      <div>
+    <div class="logo-heading">
+      <header>
         <p>{item.caseEyebrow}</p>
         <Heading tag="h2" size="md" font="serif">{item.caseClientName}</Heading>
-      </div>
+      </header>
+      <Image pictureClass="logo-picture" data={item.logo.attributes} />
     </div>
-    <p>{item.caseShortDescription}</p>
-    <a href=`/cases/${item.slug}`>{item.caseLinkText} <MaterialSymbolsArrowRight client:load /></a>
-    <hr />
+    <div class="case-text">
+      <p>{item.caseShortDescription}</p>
+      <a href=`/cases/${item.slug}`>{item.caseLinkText} <MaterialSymbolsArrowRight client:load /></a>
+    </div>
   </div>
 </li>
 
 <style>
   .case {
     display: grid;
-    gap: var(--spacing-20);
-    font-size: var(--text-sm);
-
-    @media (min-width: 1024px) {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  .case-content {
-    display: grid;
     gap: var(--spacing-16);
 
     a {
       display: flex;
       align-items: center;
-      gap: var(--spacing-8);
-      transition: opacity var(--duration-300) var(--ease-in-out-quint);
-      width: fit-content;
-
-      svg {
-        transition:
-          transform var(--duration-300) var(--ease-in-out-quint),
-          opacity var(--duration-300) var(--ease-in-out-quint);
-      }
-
-      &:hover {
-        opacity: var(--opacity-50);
-        transition: opacity var(--duration-300) var(--ease-in-out-quint);
-
-        svg {
-          transform: translateX(var(--spacing-4));
-          transition: transform var(--duration-300) var(--ease-in-out-quint);
-        }
-      }
+      gap: var(--spacing-4);
     }
 
-    h2 {
-      @media (min-width: 1024px) {
+    .logo-picture {
+      max-width: var(--spacing-52);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+
+      .case-image {
+        grid-row: span 2;
+      }
+
+      .logo-picture {
+        max-width: var(--spacing-72);
+      }
+
+      a {
+        grid-row: 4;
+        grid-column: 2;
+
+        svg {
+          transition: transform var(--duration-300) var(--ease-in-out-quint);
+        }
+
+        &:hover {
+          svg {
+            transform: translateX(var(--spacing-8));
+            transition: transform var(--duration-300) var(--ease-in-out-quint);
+          }
+        }
+      }
+
+      p {
+        grid-column: 2;
+        grid-row: 3;
+      }
+
+      header {
+        flex-direction: column;
+        order: 2;
+      }
+
+      .logo-heading {
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .case-content {
+        height: 100%;
+        grid-row: span 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      h2 {
         font-size: var(--text-2xl);
       }
     }
-
-    hr {
-      max-width: 20%;
-      background-color: var(--base-lighterGray);
-      height: 2px;
-      border: none;
-
-      @media (min-width: 768px) {
-        display: none;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      grid-template-rows: 1fr 1fr;
-    }
   }
 
-  .case-image {
-    aspect-ratio: 3 / 4;
-    min-height: 100%;
-    object-fit: cover;
-  }
-
-  .heading-logo {
+  .logo-heading {
     display: flex;
-    img {
-      flex-basis: 30%;
-      min-width: 30%;
-      order: 2;
-      object-fit: contain;
+    justify-content: space-between;
+    align-items: start;
 
-      @media (min-width: 1024px) {
-        min-width: 40%;
-      }
-    }
-
-    div {
-      flex-basis: 70%;
-      min-width: 70%;
-
-      @media (min-width: 1024px) {
-        height: fit-content;
-        margin-top: auto;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      display: contents;
+    header {
+      display: flex;
+      gap: var(--spacing-4);
       flex-direction: column;
-      align-items: flex-start;
 
-      img {
-        order: 0;
-        max-width: 10%;
+      p {
+        font-size: var(--text-xs);
       }
     }
+  }
+
+  .case-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-12);
+  }
+
+  .case-content {
+    display: grid;
+    gap: var(--spacing-16);
   }
 </style>

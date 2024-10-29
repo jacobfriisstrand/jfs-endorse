@@ -50,7 +50,7 @@ const pageData = await fetchData<PageProps>(`{
     allCases {
     logo: caseClientLogo {
       attributes: responsiveImage(
-        imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "16:9"}
+        imgixParams: {fit: clamp, auto: format, ar: "1:1", h: 75}
       ) {
         src
         width
@@ -66,6 +66,7 @@ const pageData = await fetchData<PageProps>(`{
         width
         height
         alt
+        base64
       }
     }
     caseEyebrow
@@ -99,7 +100,7 @@ const pageData = await fetchData<PageProps>(`{
 
     @media (min-width: 1400px) {
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--spacing-20);
+      gap: var(--spacing-64);
     }
   }
 </style>

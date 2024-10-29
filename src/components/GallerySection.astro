@@ -34,7 +34,7 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
     {
       shuffledEndorsers.map((endorser: Endorser) => (
         <li class="gallery__item">
-          <a title={endorser.endorserName} href={endorser.endorserSlug}>
+          <a title={endorser.endorserName} href={`/vores-profiler/${endorser.endorserSlug}`}>
             <Image src={endorser.endorserImage.responsiveImage.src} width={endorser.endorserImage.responsiveImage.width} height={endorser.endorserImage.responsiveImage.height} alt={endorser.endorserImage.responsiveImage.alt} />
             <div>
               <p>{endorser.endorserName}</p>
