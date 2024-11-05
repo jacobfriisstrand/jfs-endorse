@@ -2,7 +2,7 @@
 import { fetchData } from "@/lib/fetchData";
 import type { Endorser } from "@/lib/types";
 import { StructuredText } from "@datocms/astro";
-import { Image } from "astro:assets";
+import { Image } from "@datocms/astro";
 import { shuffleArray } from "@/lib/shuffleArray";
 
 const { allEndorsers } = Astro.props;
@@ -35,7 +35,7 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
       shuffledEndorsers.map((endorser: Endorser) => (
         <li class="gallery__item">
           <a title={endorser.endorserName} href={`/vores-profiler/${endorser.endorserSlug}`}>
-            <Image src={endorser.endorserImage.responsiveImage.src} width={endorser.endorserImage.responsiveImage.width} height={endorser.endorserImage.responsiveImage.height} alt={endorser.endorserImage.responsiveImage.alt} />
+            <Image data={endorser.endorserImage.responsiveImage} imgStyle={{ height: "100%", width: "100%", objectFit: "cover", filter: "grayscale(100%)", transition: "opacity 0.3s ease-in-out" }} />
             <div>
               <p>{endorser.endorserName}</p>
               <p>{endorser.endorserTitle}</p>
@@ -47,6 +47,7 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
   </ul>
 
   <style>
+    <!-- TODO: MAKE GALLERY WIDER TO AVOID SCROLLING TOO MUCH -->
     .gallery__image {
       object-fit: cover;
     }
@@ -62,7 +63,7 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
       height: fit-content;
       top: calc(var(--spacing-16) + var(--nav-height));
       font-family: var(--sans);
-      grid-column: full-start / col-3 !important;
+      grid-column: full-start / col-2 !important;
 
       @media (min-width: 1024px) {
         font-family: var(--font-serif);
@@ -74,16 +75,16 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
       display: grid;
       row-gap: var(--spacing-20);
       grid-template-columns: 1fr;
-      grid-template-rows: repeat(5, 1fr);
+      grid-template-rows: auto;
       grid-auto-flow: row dense;
-      grid-column: col-3 / full-end !important;
+      grid-column: col-2 / full-end !important;
 
       @media (min-width: 1024px) {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: var(--spacing-20);
       }
 
-      img {
+      .gallery__image {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -130,12 +131,8 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
         opacity: 0.5;
       }
 
-      .gallery__item a :focus-visible img {
-        border: 2px solid red;
-      }
-
-      .gallery__item:nth-child(3n + 1),
-      .gallery__item:nth-child(5n + 1) {
+      .gallery__item:nth-child(3n),
+      .gallery__item:nth-child(4n) {
         grid-column: span 2;
       }
     }

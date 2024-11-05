@@ -1,12 +1,10 @@
 ---
 export const prerender = true;
 import PageHeading from "@/components/PageHeading.astro";
-import Heading from "@/components/ui/Heading.astro";
-import MaterialSymbolsArrowForward from "@/icons/MaterialSymbolsArrowForward";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { fetchData } from "@/lib/fetchData";
 import { Seo } from "@datocms/astro/Seo";
-import { Image } from "astro:assets";
+import { Image } from "@datocms/astro";
 
 interface MetadataProps {
   allPages: {
@@ -24,7 +22,7 @@ interface PageProps {
     }[];
   };
   allEndorsers: {
-    img: {
+    image: {
       attributes: {
         src: string;
         width: number;
@@ -61,7 +59,7 @@ const pageData = await fetchData<PageProps>(`{
     headline: pageHeadline
   }
   allEndorsers {
-    img: endorserImage {
+    image: endorserImage {
       attributes: responsiveImage(
         imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "4:3"}
       ) {
@@ -69,6 +67,7 @@ const pageData = await fetchData<PageProps>(`{
         width
         height
         alt
+        base64
       }
     }
     endorserName
@@ -84,116 +83,70 @@ const pageData = await fetchData<PageProps>(`{
   <PageHeading>{pageData.page.headline}</PageHeading>
   <ul class="endorser-list">
     {
-      pageData.allEndorsers.map((endorser, index) => (
-        <li>
-          <a class={`endorser-name ${index === 0 ? "initial-active" : ""}`} href={`/vores-profiler/${endorser.endorserSlug}`}>
-            {endorser.endorserName}{" "}
-            <span>
-              {endorser.endorserTitle} <MaterialSymbolsArrowForward client:load />
-            </span>
+      pageData.allEndorsers.map((endorser) => (
+        <li class="endorser-list-item">
+          <a href={`/vores-profiler/${endorser.endorserSlug}`}>
+            <Image data={endorser.image.attributes} imgClass="endorser-image" />
+            <div class="info-container">
+              <p class="endorser-name">{endorser.endorserName}</p>
+              <p class="endorser-title">{endorser.endorserTitle}</p>
+            </div>
           </a>
-          <Image src={endorser.img.attributes.src} width={endorser.img.attributes.width} height={endorser.img.attributes.height} alt={endorser.img.attributes.alt} />
         </li>
       ))
     }
   </ul>
 </BaseLayout>
 
+<!-- TODO: CHANGE LAYOUT TO VARIATION OF GALLERYSECTION -->
+
 <style>
   .endorser-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-32);
+    display: grid;
+    grid-auto-rows: 30vh;
+    gap: var(--spacing-20);
+    padding-bottom: var(--spacing-60);
 
     @media (min-width: 1024px) {
-      gap: var(--spacing-20);
-    }
-  }
+      grid-template-columns: repeat(4, 1fr);
+      row-gap: var(--spacing-72);
+      grid-auto-flow: row dense;
 
-  li {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-8);
-  }
+      & > :nth-child(2n) {
+        grid-column: span 2;
+      }
 
-  .endorser-name {
-    width: fit-content;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-4);
-    color: var(--base-dark);
-    order: 2;
+      .info-container {
+        transition:
+          transform var(--duration-300) var(--ease-in-out-quint),
+          opacity var(--duration-300) var(--ease-in-out-quint);
+      }
 
-    span {
-      font-size: var(--text-xs);
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-4);
-
-      svg {
-        @media (min-width: 1024px) {
-          display: none;
+      a:hover {
+        .info-container {
+          transform: translateY(calc(var(--spacing-4) * -1));
+          opacity: var(--opacity-75);
+          transition:
+            transform var(--duration-300) var(--ease-in-out-quint),
+            opacity var(--duration-300) var(--ease-in-out-quint);
         }
       }
     }
 
-    @media (min-width: 1024px) {
-      color: var(--base-lightGray);
-      font-size: var(--text-lg);
+    .endorser-name {
       font-family: var(--font-serif);
-      flex-direction: row;
-      align-items: last baseline;
-      gap: var(--spacing-8);
-
-      span {
-        font-size: var(--text-sm);
-      }
-
-      &.initial-active:not(.interacted),
-      &:hover,
-      &:focus-visible {
-        color: var(--base-dark);
-      }
-
-      &.initial-active:not(.interacted) + img,
-      &:hover + img,
-      &:focus-visible + img {
-        opacity: 1;
-        transition: opacity var(--duration-700) var(--ease-in-out-quint);
-      }
+      font-size: var(--text-md);
     }
-  }
 
-  @media (min-width: 1024px) {
-    img {
-      position: absolute;
-      top: 0;
-      right: 0;
-      max-width: 50%;
-      height: 100%;
+    .endorser-title {
+      font-size: var(--text-xs);
+    }
+
+    .endorser-image {
+      min-height: 100%;
+      max-height: 100%;
       object-fit: cover;
       filter: grayscale(100%);
-      opacity: 0;
-      transition: opacity var(--duration-700) var(--linear);
-      overflow: hidden;
-    }
-
-    .initial-active:not(.interacted) + img {
-      opacity: 1;
     }
   }
 </style>
-
-<script>
-  const endorserLinks = document.querySelectorAll(".endorser-name");
-  const firstLink = document.querySelector(".endorser-name.initial-active");
-
-  endorserLinks.forEach((link) => {
-    link.addEventListener("mouseenter", () => {
-      if (firstLink) {
-        firstLink.classList.remove("initial-active");
-        firstLink.classList.add("interacted");
-      }
-    });
-  });
-</script>
