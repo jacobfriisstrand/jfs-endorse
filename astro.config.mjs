@@ -8,12 +8,14 @@ import lenis from "astro-lenis";
 // https://astro.build/config
 export default defineConfig({
   image: {
-    domains: ["datocms-assets.com"]
+    domains: ["datocms-assets.com"],
   },
   integrations: [react(), icon(), lenis()],
   devToolbar: {
-    enabled: false
+    enabled: false,
   },
   output: "server",
-  adapter: vercel()
+  adapter: vercel({
+    isr: true,
+  }),
 });
