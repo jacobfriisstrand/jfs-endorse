@@ -98,18 +98,17 @@ const pageData = await fetchData<PageProps>(`{
   </ul>
 </BaseLayout>
 
-<!-- TODO: CHANGE LAYOUT TO VARIATION OF GALLERYSECTION -->
-
 <style>
   .endorser-list {
     display: grid;
     grid-auto-rows: 30vh;
-    gap: var(--spacing-20);
+    gap: var(--spacing-136);
     padding-bottom: var(--spacing-60);
 
     @media (min-width: 1024px) {
       grid-template-columns: repeat(4, 1fr);
-      row-gap: var(--spacing-72);
+      gap: var(--spacing-72);
+      column-gap: var(--spacing-24);
       grid-auto-flow: row dense;
 
       & > :nth-child(2n) {

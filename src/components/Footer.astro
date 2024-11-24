@@ -26,6 +26,10 @@ export interface FooterProps {
       height: number;
     };
   };
+  privacyPolicy: {
+    pageSlug: string;
+    pageHeadline: string;
+  };
 }
 
 const data = await fetchData<FooterProps>(`{
@@ -50,7 +54,10 @@ const data = await fetchData<FooterProps>(`{
       height
     }
   }
-  
+  privacyPolicy: page(filter: {pageSlug: {eq: "privatlivs-politik"}}) {
+    pageSlug
+    pageHeadline
+  }
 }`);
 ---
 
@@ -91,7 +98,10 @@ const data = await fetchData<FooterProps>(`{
           }
         </div>
         <hr />
-        <p>© {new Date().getFullYear()} {data.generalInfo.officialCompanyName}</p>
+        <div class="copyright-group">
+          <p>© {new Date().getFullYear()} {data.generalInfo.officialCompanyName}</p>
+          <a href={`/${data.privacyPolicy.pageSlug}`}>{data.privacyPolicy.pageHeadline}</a>
+        </div>
       </div>
     </div>
   </address>
@@ -113,7 +123,7 @@ const data = await fetchData<FooterProps>(`{
   address {
     font: inherit;
     position: relative;
-    height: calc(100vh + var(--footer-height) - var(--spacing-32));
+    height: calc(100vh + var(--footer-height) - var(--spacing-40));
     top: -100vh;
   }
 
@@ -131,7 +141,8 @@ const data = await fetchData<FooterProps>(`{
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
-    gap: var(--spacing-32);
+    gap: var(--spacing-24);
+    align-items: end;
 
     @media (min-width: 1024px) {
       grid-template-columns: 1fr 1fr;
@@ -213,5 +224,10 @@ const data = await fetchData<FooterProps>(`{
 
   .fadeout-horizontal {
     mask-image: linear-gradient(to right, transparent, var(--base-dark) 5rem, var(--base-dark) calc(100% - 5rem), transparent);
+  }
+
+  .copyright-group {
+    display: grid;
+    gap: var(--spacing-12);
   }
 </style>

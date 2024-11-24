@@ -1,0 +1,51 @@
+---
+import PageHeading from "@/components/PageHeading.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { fetchData } from "@/lib/fetchData";
+import { StructuredText } from "@datocms/astro";
+import { Seo } from "@datocms/astro/Seo";
+
+interface PageProps {
+  page: {
+    seo: {
+      attributes: Record<string, string>;
+      content: string;
+      tag: string;
+    }[];
+    headline: string;
+  };
+  privatlivsPolitik: {
+    privatlivspolitik: any;
+  };
+}
+
+const pageData = await fetchData<PageProps>(`{
+  page(filter: {pageSlug: {eq: "privatlivs-politik"}}) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
+    headline: pageHeadline
+  }
+  privatlivsPolitik {
+    _publishedAt
+    privatlivspolitik {
+      value
+    }
+  }
+}`);
+---
+
+<Seo data={[...pageData.page.seo]} />
+
+<BaseLayout>
+  <PageHeading tag="h1" size="4xl" font="serif">{pageData.page.headline}</PageHeading>
+  <div class="privatlivs-politik">
+    <div class="privatlivs-politik-content">
+      <StructuredText data={pageData.privatlivsPolitik.privatlivspolitik} />
+    </div>
+  </div>
+</BaseLayout>
+
+<style></style>
