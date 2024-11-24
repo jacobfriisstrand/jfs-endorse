@@ -63,11 +63,12 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
       height: fit-content;
       top: calc(var(--spacing-16) + var(--nav-height));
       font-family: var(--sans);
-      grid-column: full-start / col-2 !important;
+      grid-column: full-start / col-3 !important;
 
       @media (min-width: 1024px) {
         font-family: var(--font-serif);
         font-size: var(--text-lg);
+        grid-column: full-start / col-2 !important;
       }
     }
 
@@ -77,11 +78,12 @@ const shuffledEndorsers = shuffleArray(allEndorsers as Endorser[]);
       grid-template-columns: 1fr;
       grid-template-rows: auto;
       grid-auto-flow: row dense;
-      grid-column: col-2 / full-end !important;
+      grid-column: col-3 / full-end !important;
 
       @media (min-width: 1024px) {
         grid-template-columns: repeat(6, 1fr);
         gap: var(--spacing-20);
+        grid-column: col-2 / full-end !important;
       }
 
       .gallery__image {
