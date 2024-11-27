@@ -76,35 +76,35 @@ export default function ContactSectionForm({ children }: Readonly<{ children: Re
             <label htmlFor="name">Navn</label>
             {errors.from_name && <span className={errors.from_name ? `${styles.input__error}` : ""}>{errors.from_name.message}</span>}
           </div>
-          <input type="text" {...register("from_name")} />
+          <input type="text" id="name" {...register("from_name")} />
         </div>
         <div>
           <div className={styles.label__group}>
             <label htmlFor="email">Email</label>
             {errors.email && <span className={errors.email ? `${styles.input__error}` : ""}>{errors.email.message}</span>}
           </div>
-          <input type="text" {...register("email")} />
+          <input type="text" id="email" {...register("email")} />
         </div>
         <div>
           <div className={styles.label__group}>
             <label htmlFor="phone">Telefon</label>
             {errors.phone && <span className={errors.phone ? `${styles.input__error}` : ""}>{errors.phone.message}</span>}
           </div>
-          <input type="text" {...register("phone")} />
+          <input type="text" id="phone" {...register("phone")} />
         </div>
         <div>
           <div className={styles.label__group}>
             <label htmlFor="subject">Emne</label>
             {errors.subject && <span className={errors.subject ? `${styles.input__error}` : ""}>{errors.subject.message}</span>}
           </div>
-          <input type="text" {...register("subject")} />
+          <input type="text" id="subject" {...register("subject")} />
         </div>
         <div>
           <div className={styles.label__group}>
             <label htmlFor="message">Besked</label>
             {errors.message && <span className={errors.message ? `${styles.input__error}` : ""}>{errors.message.message}</span>}
           </div>
-          <textarea rows={7} {...register("message")} />
+          <textarea rows={7} id="message" {...register("message")} />
         </div>
         {children}
       </form>

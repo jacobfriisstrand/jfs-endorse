@@ -1,7 +1,7 @@
 ---
 import Heading from "@/components/ui/Heading.astro";
 import HeroCarousel from "@/components/HeroCarousel/HeroCarousel";
-import BaseLayout, { type MetaTag } from "@/layouts/BaseLayout.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 import { fetchData } from "@/lib/fetchData";
 import Button from "@/components/ui/Button.astro";
 import AboutUsTeaser from "@/components/AboutUsTeaser.astro";
@@ -9,10 +9,15 @@ import GallerySection from "@/components/GallerySection.astro";
 import sanitizeDatoCmsHtml from "@/lib/sanitizeDatoCmsHtml";
 import BrandCollabs from "@/components/BrandCollabs.astro";
 import ContactSection from "@/components/ContactSection.astro";
+import { Seo } from "@datocms/astro/Seo";
 
 export interface HomepageProps {
   homepage: {
-    _seoMetaTags: MetaTag[];
+    seo: {
+      attributes: Record<string, string>;
+      content: string;
+      tag: string;
+    }[];
     heroTitle: string;
     heroButtonText: string;
     heroButtonLink: {
@@ -41,10 +46,11 @@ export interface HeroCarouselProps {
 
 const data = await fetchData<HomepageProps & HeroCarouselProps>(`{
   homepage {
-    _seoMetaTags {
-      content
+    seo: _seoMetaTags {
       attributes
-    }
+      content
+      tag
+  }
     heroTitle
     heroButtonText
     heroButtonLink {
@@ -58,7 +64,7 @@ const data = await fetchData<HomepageProps & HeroCarouselProps>(`{
     endorserTitle
     endorserSlug
     endorserImage {
-      responsiveImage(imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "16:9"}) {
+      responsiveImage(imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "4:3"}) {
         src
         width
         height
@@ -69,7 +75,9 @@ const data = await fetchData<HomepageProps & HeroCarouselProps>(`{
 }`);
 ---
 
-<BaseLayout seoMetaTags={data.homepage._seoMetaTags}>
+<Seo data={[...data.homepage.seo]} />
+
+<BaseLayout>
   <HeroCarousel client:load allEndorsers={data.allEndorsers}>
     <Heading size="lg" font="serif" id="carouselheading" tag="h1" set:html={sanitizeDatoCmsHtml(data.homepage.heroTitle)} />
     <Button size="base" asLink href={data.homepage.heroButtonLink.pageSlug} href={data.homepage.heroButtonLink.pageSlug}>{data.homepage.heroButtonText}</Button>

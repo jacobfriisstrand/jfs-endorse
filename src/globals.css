@@ -1,3 +1,24 @@
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
 /* CSS Reset */
 
 *,
@@ -18,7 +39,7 @@ button {
 
 a:focus-visible,
 button:focus-visible {
-  outline: 1px solid var(--base-dark);
+  outline: 1px solid currentColor;
   outline-offset: 2px;
 }
 
@@ -55,6 +76,7 @@ h5,
 h6 {
   overflow-wrap: break-word;
   text-wrap: balance;
+  max-width: 65ch;
 }
 
 body {
@@ -72,11 +94,14 @@ h6 {
 }
 
 :root {
+  --nav-height: 4.8125rem;
+
   /* Universal Padding */
   --universal-inline-padding: var(--spacing-20);
 
   /* Colors */
   --base-dark: #131313;
+  --base-darkGray: #3f3f40;
   --base-light: #ffffff;
   --base-lightGray: #565856;
   --base-lighterGray: #efefef;
@@ -117,10 +142,12 @@ h6 {
   --spacing-28: 1.75rem;
   --spacing-32: 2rem;
   --spacing-36: 2.25rem;
+  --spacing-40: 2.5rem;
   --spacing-44: 2.75rem;
   --spacing-52: 3.25rem;
   --spacing-56: 3.5rem;
   --spacing-60: 3.75rem;
+  --spacing-64: 4rem;
   --spacing-72: 4.5rem;
   --spacing-84: 5.25rem;
   --spacing-136: 8.5rem;
@@ -141,11 +168,13 @@ h6 {
 
   /* Opacity */
   --opacity-50: 0.5;
+  --opacity-75: 0.75;
   --opacity-100: 1;
 
   /* Transition Durations */
   --duration-150: 150ms;
   --duration-300: 300ms;
+  --duration-500: 500ms;
   --duration-700: 700ms;
   --duration-1500: 1500ms;
 
@@ -157,7 +186,6 @@ h6 {
 /* Animations */
 
 /* Global styles */
-
 html {
   background-color: var(--base-light);
   scroll-behavior: smooth;

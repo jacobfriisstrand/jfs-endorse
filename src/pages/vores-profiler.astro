@@ -1,0 +1,150 @@
+---
+import PageHeading from "@/components/PageHeading.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { fetchData } from "@/lib/fetchData";
+import { Seo } from "@datocms/astro/Seo";
+import { Image } from "@datocms/astro";
+
+interface MetadataProps {
+  allPages: {
+    slug: string;
+  }[];
+}
+
+interface PageProps {
+  page: {
+    headline: string;
+    seo: {
+      attributes: Record<string, string>;
+      content: string;
+      tag: string;
+    }[];
+  };
+  allEndorsers: {
+    image: {
+      attributes: {
+        src: string;
+        width: number;
+        height: number;
+        alt: string;
+      };
+    };
+    endorserName: string;
+    endorserTitle: string;
+    endorserSlug: string;
+  }[];
+}
+
+export async function getStaticPaths() {
+  const data = await fetchData<MetadataProps>(`{
+    allPages {
+      slug: pageSlug
+    }
+  }`);
+  return data.allPages.map(({ slug }) => {
+    return {
+      params: { slug },
+    };
+  });
+}
+
+const pageData = await fetchData<PageProps>(`{
+  page(filter: {pageSlug: {eq: "vores-profiler"}}) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
+    headline: pageHeadline
+  }
+  allEndorsers {
+    image: endorserImage {
+      attributes: responsiveImage(
+        imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "4:3"}
+      ) {
+        src
+        width
+        height
+        alt
+        base64
+      }
+    }
+    endorserName
+    endorserTitle
+    endorserSlug
+  }
+}`);
+---
+
+<Seo data={[...pageData.page.seo]} />
+
+<BaseLayout>
+  <PageHeading>{pageData.page.headline}</PageHeading>
+  <ul class="endorser-list">
+    {
+      pageData.allEndorsers.map((endorser) => (
+        <li class="endorser-list-item">
+          <a href={`/vores-profiler/${endorser.endorserSlug}`}>
+            <Image data={endorser.image.attributes} imgClass="endorser-image" />
+            <div class="info-container">
+              <p class="endorser-name">{endorser.endorserName}</p>
+              <p class="endorser-title">{endorser.endorserTitle}</p>
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
+
+<style>
+  .endorser-list {
+    display: grid;
+    grid-auto-rows: 30vh;
+    gap: var(--spacing-136);
+    padding-bottom: var(--spacing-60);
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-72);
+      column-gap: var(--spacing-24);
+      grid-auto-flow: row dense;
+
+      & > :nth-child(2n) {
+        grid-column: span 2;
+      }
+
+      .info-container {
+        transition:
+          transform var(--duration-300) var(--ease-in-out-quint),
+          opacity var(--duration-300) var(--ease-in-out-quint);
+      }
+
+      a:hover {
+        .info-container {
+          transform: translateY(calc(var(--spacing-4) * -1));
+          opacity: var(--opacity-75);
+          transition:
+            transform var(--duration-300) var(--ease-in-out-quint),
+            opacity var(--duration-300) var(--ease-in-out-quint);
+        }
+      }
+    }
+
+    .endorser-name {
+      font-family: var(--font-serif);
+      font-size: var(--text-md);
+    }
+
+    .endorser-title {
+      font-size: var(--text-xs);
+    }
+
+    .endorser-image {
+      min-height: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+    }
+  }
+</style>

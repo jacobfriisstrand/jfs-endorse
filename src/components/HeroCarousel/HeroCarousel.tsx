@@ -7,6 +7,7 @@ import MaterialSymbolsArrowForward from "@/icons/MaterialSymbolsArrowForward";
 import MaterialSymbolsArrowOutward from "@/icons/MaterialSymbolsArrowOutward";
 import type { Endorser } from "@/lib/types";
 import type { HeroCarouselProps } from "@/pages/index.astro";
+import { Image } from "react-datocms";
 
 export default function HeroCarousel({ children, allEndorsers }: Readonly<{ children: React.ReactNode }> & HeroCarouselProps) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -106,15 +107,15 @@ export default function HeroCarousel({ children, allEndorsers }: Readonly<{ chil
   }
 
   return (
-    <section aria-labelledby="carouselheading" className={styles.hero}>
+    <section aria-labelledby="carouselheading" className={styles.hero} role="region" aria-roledescription="carousel">
       <header className={styles.hero__header}>{children}</header>
       <div className={styles.visually__hidden} aria-live="polite" ref={liveRegionRef} />
-      <ul>
+      <ul id="carousel-content">
         {shuffledEndorsers.map((endorser: Endorser, index) => (
-          <li ref={(el) => (slideRefs.current[index] = el)} className={`${styles.slide__container} ${currentIndex === index ? styles.show : styles.hide}`} key={endorser.endorserName}>
+          <li ref={(el) => (slideRefs.current[index] = el)} className={`${styles.slide__container} ${currentIndex === index ? styles.show : styles.hide}`} key={endorser.endorserName} aria-roledescription="slide" aria-label={`${index + 1} of ${shuffledEndorsers.length}`}>
             <article className={styles.slide}>
-              <img loading={index === 0 ? "eager" : "lazy"} src={endorser.endorserImage.responsiveImage.src} alt={endorser.endorserImage.responsiveImage.alt} />
-              <a href={`/${endorser.endorserSlug}`}>
+              <Image data={endorser.endorserImage.responsiveImage} />
+              <a href={`/vores-profiler/${endorser.endorserSlug}`} tabIndex={currentIndex === index ? 0 : -1}>
                 <h2>
                   {endorser.endorserName}
                   <span>
@@ -129,16 +130,23 @@ export default function HeroCarousel({ children, allEndorsers }: Readonly<{ chil
       </ul>
       <div className={styles.carousel__dot__group}>
         {shuffledEndorsers.map((endorser: Endorser, index) => (
-          <button role="tab" aria-selected={index === currentIndex} aria-label={`Slide ${index + 1}`} key={endorser.id} className={`${styles.dot} ${index === currentIndex ? styles.dot__active : ""}`} onClick={() => changeSlide(index)}>
+          <button
+            aria-label={`Gå til slide ${index + 1}`}
+            aria-controls="carousel-content"
+            aria-current={index === currentIndex ? "true" : "false"}
+            key={endorser.id}
+            className={`${styles.dot} ${index === currentIndex ? styles.dot__active : ""}`}
+            onClick={() => changeSlide(index)}
+          >
             {index === currentIndex && <div key={animationKey} style={{ animation: `${styles.dot__timer} ${slideTimer}ms linear` }} className={styles.dot__slider} aria-hidden />}
           </button>
         ))}
       </div>
       <div className={styles.carousel__controls}>
-        <button onClick={handlePrevious} aria-label="Tidligere slide" className={styles.carousel__button}>
+        <button onClick={handlePrevious} aria-label="Tidligere slide" className={styles.carousel__button} aria-controls="carousel-content">
           <MaterialSymbolsArrowBack />
         </button>
-        <button onClick={handleNext} aria-label="Næste slide" className={styles.carousel__button}>
+        <button onClick={handleNext} aria-label="Næste slide" className={styles.carousel__button} aria-controls="carousel-content">
           <MaterialSymbolsArrowForward />
         </button>
       </div>

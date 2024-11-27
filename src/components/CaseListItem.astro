@@ -1,0 +1,152 @@
+---
+import MaterialSymbolsArrowRight from "@/icons/MaterialSymbolsArrowForward";
+import Heading from "./ui/Heading.astro";
+import { Image } from "@datocms/astro";
+
+const { item } = Astro.props;
+
+export interface Props {
+  item: CaseItem;
+}
+
+export interface CaseItem {
+  logo: {
+    attributes: {
+      src: string;
+      width: number;
+      height: number;
+      alt: string;
+    };
+  };
+  image: {
+    attributes: {
+      src: string;
+      width: number;
+      height: number;
+      alt: string;
+    };
+  };
+  caseEyebrow: string;
+  caseClientName: string;
+  caseShortDescription: string;
+  caseLinkText: string;
+  slug: string;
+}
+---
+
+<li class="case">
+  <Image pictureClass="case-image" data={item.image.attributes} />
+  <div class="case-content">
+    <div class="logo-heading">
+      <header>
+        <p>{item.caseEyebrow}</p>
+        <Heading tag="h2" size="md" font="serif">{item.caseClientName}</Heading>
+      </header>
+      <Image pictureClass="logo-picture" data={item.logo.attributes} />
+    </div>
+    <div class="case-text">
+      <p>{item.caseShortDescription}</p>
+      <a href=`/cases/${item.slug}`>{item.caseLinkText} <MaterialSymbolsArrowRight client:load /></a>
+    </div>
+  </div>
+</li>
+
+<style>
+  .case {
+    display: grid;
+    gap: var(--spacing-16);
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-4);
+    }
+
+    .logo-picture {
+      max-width: var(--spacing-52);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+
+      .case-image {
+        grid-row: span 2;
+      }
+
+      .logo-picture {
+        max-width: var(--spacing-72);
+      }
+
+      a {
+        grid-row: 4;
+        grid-column: 2;
+
+        svg {
+          transition: transform var(--duration-300) var(--ease-in-out-quint);
+        }
+
+        &:hover {
+          svg {
+            transform: translateX(var(--spacing-8));
+            transition: transform var(--duration-300) var(--ease-in-out-quint);
+          }
+        }
+      }
+
+      p {
+        grid-column: 2;
+        grid-row: 3;
+      }
+
+      header {
+        flex-direction: column;
+        order: 2;
+      }
+
+      .logo-heading {
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .case-content {
+        height: 100%;
+        grid-row: span 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      h2 {
+        font-size: var(--text-2xl);
+      }
+    }
+  }
+
+  .logo-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+
+    header {
+      display: flex;
+      gap: var(--spacing-4);
+      flex-direction: column;
+
+      p {
+        font-size: var(--text-xs);
+      }
+    }
+  }
+
+  .case-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-12);
+  }
+
+  .case-content {
+    display: grid;
+    gap: var(--spacing-16);
+  }
+</style>

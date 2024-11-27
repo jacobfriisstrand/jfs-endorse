@@ -12,12 +12,13 @@ const btnSizes = {
   small: "small-size",
 };
 
-const { class: className, variant = "default", asLink, size, ...rest } = Astro.props as Props;
+const { class: className, variant = "default", asLink, size, rounded, ...rest } = Astro.props as Props;
 
 interface ButtonProps extends HTMLAttributes<"button"> {
   variant?: keyof typeof btnVariants;
   size: keyof typeof btnSizes;
   class?: string;
+  rounded?: boolean;
 }
 
 interface LinkProps extends HTMLAttributes<"a"> {
@@ -25,6 +26,7 @@ interface LinkProps extends HTMLAttributes<"a"> {
   size: keyof typeof btnSizes;
   href: string;
   class?: string;
+  rounded?: boolean;
 }
 
 type Props = (ButtonProps & { asLink?: false }) | (LinkProps & { asLink: true });
@@ -32,11 +34,11 @@ type Props = (ButtonProps & { asLink?: false }) | (LinkProps & { asLink: true })
 
 {
   asLink ? (
-    <a {...(rest as ButtonProps)} class:list={["base", btnVariants[variant], className, btnSizes[size]]}>
+    <a {...(rest as ButtonProps)} class:list={["base", btnVariants[variant], className, rounded ? "rounded" : "", btnSizes[size]]}>
       <slot />
     </a>
   ) : (
-    <button {...(rest as ButtonProps)} class:list={["base", btnVariants[variant], className, btnSizes[size]]}>
+    <button {...(rest as ButtonProps)} class:list={["base", btnVariants[variant], rounded ? "rounded" : "", className, btnSizes[size]]}>
       <slot />
     </button>
   )
@@ -74,6 +76,10 @@ type Props = (ButtonProps & { asLink?: false }) | (LinkProps & { asLink: true })
         color var(--duration-300) var(--ease-in-out-quint),
         background-color var(--duration-300) var(--ease-in-out-quint);
     }
+  }
+
+  .rounded {
+    border-radius: var(--rounded-full);
   }
 
   /* sizes */

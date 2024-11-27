@@ -33,7 +33,7 @@ const data = await fetchData<ContactSectionProps>(`{
 }`);
 ---
 
-<section class="full-bleed">
+<section class="full-bleed" id="contact">
   <div class="contact-content">
     <Heading tag="h3" size="2xl" font="serif">{data.homepage.contactHeader}</Heading>
     <div>
@@ -53,13 +53,13 @@ const data = await fetchData<ContactSectionProps>(`{
       gap: var(--spacing-20);
 
       @media (min-width: 1024px) {
-        grid-column: col-1 / col-3;
+        grid-column: col-1 / col-3 !important;
       }
     }
 
     section {
+      scroll-margin-top: 4.625rem;
       margin-bottom: var(--spacing-52);
-
       @media (min-width: 1024px) {
         margin-bottom: var(--spacing-152);
       }

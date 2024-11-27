@@ -1,0 +1,256 @@
+---
+import Breadcrumb from "@/components/ui/Breadcrumb.astro";
+import Heading from "@/components/ui/Heading.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { fetchData } from "@/lib/fetchData";
+import { Seo } from "@datocms/astro/Seo";
+import { Image } from "astro:assets";
+import SheerLogo from "@/assets/sheer_logo_bg.webp";
+import MaterialSymbolsArrowForward from "@/icons/MaterialSymbolsArrowForward";
+
+const { endorserSlug } = Astro.params;
+
+export async function getStaticPaths() {
+  const data = await fetchData<MetadataProps>(`{
+    allEndorsers {
+      endorserSlug
+    }
+  }`);
+  return data.allEndorsers.map(({ endorserSlug }) => {
+    return {
+      params: { endorserSlug },
+    };
+  });
+}
+
+interface MetadataProps {
+  allEndorsers: {
+    endorserSlug: string;
+  }[];
+}
+
+interface PageProps {
+  endorser: {
+    seo: {
+      attributes: Record<string, string>;
+      content: string;
+      tag: string;
+    }[];
+    image: {
+      attributes: {
+        src: string;
+        width: number;
+        height: number;
+        alt: string;
+      };
+    };
+    endorserName: string;
+    endorserTitle: string;
+    endorserDescription: string;
+    endorserSocialMedia: {
+      platformName: string;
+      socialMediaHandle: string;
+      socialMediaLink: string;
+    }[];
+    endorserSheerMediakitLink: string;
+  };
+}
+
+const endorserData = await fetchData<PageProps>(`{
+  endorser(filter: {endorserSlug: {eq: "${endorserSlug}"}}) {
+    seo: _seoMetaTags {
+      attributes
+      content
+      tag
+    }
+    image: endorserImage {
+      attributes: responsiveImage(
+        imgixParams: {fit: crop, auto: format, crop: focalpoint, ar: "16:9"}
+      ) {
+        src
+        width
+        height
+        alt
+      }
+    }
+    endorserName
+    endorserTitle
+    endorserDescription
+    endorserSocialMedia {
+      platformName
+      socialMediaHandle
+      socialMediaLink
+    }
+    endorserSheerMediakitLink
+  }
+}`);
+
+if (!endorserData.endorser) return Astro.redirect("/404");
+
+const { seo, image, endorserName, endorserTitle, endorserDescription, endorserSocialMedia, endorserSheerMediakitLink } = endorserData.endorser;
+---
+
+<Seo data={[...seo]} />
+
+<BaseLayout>
+  <div class="full-bleed">
+    <Image class="endorser-image" src={image.attributes.src} alt={image.attributes.alt} width={image.attributes.width} height={image.attributes.height} />
+    <div class="endorser-content">
+      <Breadcrumb class="endorser-breadcrumb" slug={endorserSlug} href="/vores-profiler">
+        <Fragment slot="previous-page">Vores profiler</Fragment>
+        <Fragment slot="current-page">{endorserName}</Fragment>
+      </Breadcrumb>
+      <div class="endorser-info">
+        <Heading tag="h1" size="lg" font="serif">{endorserName}</Heading>
+        <p>{endorserTitle}</p>
+      </div>
+      <hr />
+      <p>{endorserDescription}</p>
+      <a href={endorserSheerMediakitLink} class="endorser-sheer-mediakit" target="_blank">
+        <Image src={SheerLogo} alt="Sheer Mediakit logo" />
+        <span>Sheer Mediakit</span>
+        <MaterialSymbolsArrowForward client:load />
+      </a>
+      <div class="endorser-social-media">
+        <h2>Sociale medier</h2>
+        {
+          endorserSocialMedia.length > 2 ? (
+            <ul>
+              {endorserSocialMedia.map(({ socialMediaHandle, socialMediaLink, platformName }) => (
+                <li>
+                  <span>{platformName}</span>
+                  <span>⎯⎯⎯⎯</span>
+                  <a href={socialMediaLink} target="_blank" rel="noopener noreferrer">
+                    {socialMediaHandle}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            endorserSocialMedia.map(({ socialMediaHandle, socialMediaLink, platformName }) => (
+              <p>
+                <span>{platformName}</span>
+                <span>⎯⎯⎯⎯</span>
+                <a href={socialMediaLink} target="_blank" rel="noopener noreferrer">
+                  {socialMediaHandle}
+                </a>
+              </p>
+            ))
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .full-bleed {
+    display: contents;
+  }
+
+  .endorser-content {
+    padding-inline: var(--universal-inline-padding);
+    margin-top: var(--spacing-12);
+    display: grid;
+    gap: var(--spacing-16);
+
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 0.5fr;
+      column-gap: var(--spacing-64);
+      align-items: start;
+
+      hr {
+        display: none;
+      }
+
+      p {
+        grid-column: 1;
+      }
+
+      .endorser-social-media {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      .endorser-sheer-mediakit {
+        grid-column: 2;
+        margin-bottom: auto;
+      }
+
+      h1 {
+        font-size: var(--text-xl);
+      }
+    }
+  }
+
+  .endorser-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+
+    @media (min-width: 1024px) {
+      flex-direction: row;
+      align-items: last baseline;
+      gap: var(--spacing-64);
+      grid-column: 1;
+      max-height: fit-content;
+    }
+  }
+
+  .endorser-breadcrumb {
+    margin-bottom: var(--spacing-20);
+  }
+
+  .endorser-image {
+    aspect-ratio: 3 / 4;
+    width: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+    filter: grayscale(100%);
+
+    @media (min-width: 1024px) {
+      aspect-ratio: 16 / 6;
+    }
+  }
+
+  hr {
+    background-color: var(--base-lighterGray);
+  }
+
+  .endorser-social-media {
+    font-size: var(--text-sm);
+    grid-row: 3;
+    display: grid;
+    gap: var(--spacing-8);
+
+    li,
+    p {
+      display: flex;
+      gap: var(--spacing-16);
+      color: var(--base-darkGray);
+    }
+
+    @media (min-width: 1024px) {
+      font-size: var(--text-base);
+    }
+  }
+
+  .endorser-sheer-mediakit {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-8);
+    font-size: var(--text-sm);
+    color: var(--base-darkGray);
+    width: fit-content;
+
+    img {
+      height: var(--spacing-16);
+      width: var(--spacing-16);
+      aspect-ratio: 1;
+    }
+
+    @media (min-width: 1024px) {
+      font-size: var(--text-base);
+    }
+  }
+</style>
