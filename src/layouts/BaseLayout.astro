@@ -3,7 +3,6 @@ import Footer from "@/components/Footer.astro";
 import Navigation from "@/components/Navigation.astro";
 import { fetchData } from "@/lib/fetchData";
 import { Seo } from "@datocms/astro/Seo";
-import Lenis from "lenis";
 
 interface FavIconProps {
   _site: {
@@ -44,6 +43,17 @@ const favIcon = await fetchData<FavIconProps>(`{
     <!-- Start of HubSpot Embed Code -->
     <script type="text/javascript" id="hs-script-loader" async defer src="//js-eu1.hs-scripts.com/144813661.js"></script>
     <!-- End of HubSpot Embed Code -->
+    <script>
+      import Lenis from "lenis";
+      const lenis = new Lenis();
+
+      function raf(time: number) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
+      requestAnimationFrame(raf);
+    </script>
   </body>
 </html>
 

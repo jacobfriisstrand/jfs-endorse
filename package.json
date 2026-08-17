@@ -2,6 +2,12 @@
   "name": "jfs-endorse",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "node": "24.x"
+  },
+  "overrides": {
+    "vite": "^7"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -10,16 +16,15 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.3",
-    "@astrojs/react": "^3.6.2",
-    "@astrojs/vercel": "^7.8.0",
-    "@datocms/astro": "^0.3.4",
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/react": "^5.0.7",
+    "@astrojs/vercel": "^10.0.8",
+    "@datocms/astro": "^0.6.14",
     "@hookform/resolvers": "^3.9.0",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
-    "astro": "^4.14.4",
-    "astro-icon": "^1.1.1",
-    "astro-lenis": "^1.0.0",
+    "astro": "^6.4.8",
+    "astro-icon": "^1.1.5",
     "gsap": "^3.12.5",
     "lenis": "^1.1.14",
     "react": "^18.3.1",

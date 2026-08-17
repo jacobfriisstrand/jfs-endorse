@@ -1,16 +1,14 @@
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import icon from "astro-icon";
-import vercel from "@astrojs/vercel/serverless";
-
-import lenis from "astro-lenis";
+import vercel from "@astrojs/vercel";
 
 // https://astro.build/config
 export default defineConfig({
   image: {
     domains: ["datocms-assets.com"],
   },
-  integrations: [react(), icon(), lenis()],
+  integrations: [react(), icon()],
   devToolbar: {
     enabled: false,
   },
